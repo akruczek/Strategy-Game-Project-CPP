@@ -74,7 +74,7 @@ void LOAD_TEXTURES(string incode) {	//£ADOWANIE TEKSTUR
 
 	tex[4][40].loadFromFile("data/graphics/icons/iconFarm.png");							//FARMA
 	tex[4][41].loadFromFile("data/graphics/icons/iconFish.png");							//FISH
-	tex[4][42].loadFromFile("data/graphics/icons/<>.png");
+	tex[4][42].loadFromFile("data/graphics/icons/iconHunting.png");							//HUNTING
 	tex[4][43].loadFromFile("data/graphics/icons/<>.png");
 	tex[4][44].loadFromFile("data/graphics/icons/<>.png");
 	tex[4][45].loadFromFile("data/graphics/icons/<>.png");
