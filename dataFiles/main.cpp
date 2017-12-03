@@ -33,6 +33,10 @@ void NEXT_TURN();
 void PLACE_BUILDING(string building);
 void PLACE_BUILDING_MAIN(int spIdX, int spIdY, int priceId);
 void CHECK_STATUS_1();
+void UPGRADE_BUILDING_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost);
+void UPGRADE_BUILDING_COST_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost);
+void FOOD_MORE();
+void FOOD_MORE_MAIN(int i, int j, bool YesOrNo);
 bool yesNoBoxActive = false;
 bool difficulty[3] = { 1, 0, 0 };
 bool mapSize[3] = { 0, 1, 0 };
@@ -54,6 +58,8 @@ int tAddon = 0;
 #include "map.h"
 #include "player.h"
 #include "text.h"
+
+Color colorSp1_4 = sp[1][4].getColor();
 
 int main()	{
 	window.create(VideoMode(1280, 720, 32), "Main Menu");		//TWORZENIE OKNA (1280x720)
@@ -333,6 +339,7 @@ void START_GAME() {
 	bool pickingMaterialsFood = false;
 	bool removingBuildings = false;
 	bool upgradingBuildings = false;
+	bool moreFood = false;
 	int placeBuildingId = 0;
 	string placeBuildingName = "";
 	CHECK_STATUS_1();
@@ -514,6 +521,9 @@ void START_GAME() {
 					}
 				}
 				if (event.type == Event::KeyPressed && event.key.code == Keyboard::B) { CHEATS(); }
+
+				//MORE BUTTON (FOOD)
+				if (mouseX >= 675 && mouseX <= 691 && mouseY >= 32 && mouseY <= 48)	moreFood = true;
 			}
 			window.clear(Color::White);
 
@@ -586,7 +596,7 @@ void START_GAME() {
 			}
 
 			//YWŒWIETLANIE ZBLI¯ENIA POLA
-			if (!yesNoBoxActive) {
+			if (!yesNoBoxActive && !moreFood) {
 				if (mouseX >= 50 && mouseX <= 700 && mouseY >= 50 && mouseY <= 700) {
 					for (int i = 0; i < 10; i++) {
 						for (int j = 0; j < 10; j++) {
@@ -740,6 +750,12 @@ void START_GAME() {
 			for (int i = 9; i < 12; i++)
 				window.draw(txt[0][i]);
 
+			//moreButton
+			sp[1][4].setPosition(675, 32);
+			if (mouseX >= 675 && mouseX <= 691 && mouseY >= 32 && mouseY <= 48)	sp[1][4].setColor(colorSp1_4);
+			else sp[1][4].setColor(Color::Transparent);
+			window.draw(sp[1][4]);
+
 			if (yesNoBoxActive == true) {
 				if (lang == "english")
 					YES_NO_BOX(L"Are you sure you want to Exit?", L"Unsaved progress will be lost!");
@@ -809,6 +825,9 @@ void START_GAME() {
 				if (removingBuildings) { sp[4][22].setPosition(mouseX + 10, mouseY - 10); window.draw(sp[4][22]); }
 				if (upgradingBuildings) { sp[4][23].setPosition(mouseX + 10, mouseY - 10); window.draw(sp[4][23]); }
 			}
+
+			//MORE FOOD
+			if (moreFood)	FOOD_MORE();
 
 			window.display();
 		}
@@ -978,7 +997,7 @@ void MAP_GENERATOR() {
 				if (((rand() % 100) + 1) % 29 == 0 && mapFieldsNames[i][j] != "water") { 
 					ADD_BUILDING(i, j, 0, "townHall");
 					cout << "[!] Generated Town Hall on field " << "[" << i << "] [" << j << "]" << endl;
-					playerPopulation += 10;
+//					playerPopulation += 10;
 					isTownHall = true;
 					if (i < 9) {
 						mapFieldsBuildings[i + 1][j] = "storage";
@@ -1003,7 +1022,7 @@ void MAP_GENERATOR() {
 					if (((rand() % 100) + 1) % 3 == 0 && mapFieldsNames[i][j] != "water") {
 						ADD_BUILDING(i, j, 0, "townHall");
 						cout << "[!] Generated Town Hall on field " << "[" << i << "] [" << j << "]" << endl; 
-						playerPopulation += 10;
+//						playerPopulation += 10;
 						isTownHall = true;
 						if (i < 9) {
 							mapFieldsBuildings[i + 1][j] = "storage";
@@ -1027,7 +1046,7 @@ void MAP_GENERATOR() {
 					if (isTownHall == false && i == 9 && j == 9) {
 						ADD_BUILDING(i, j, 0, "townHall");
 						cout << "[!] Generated Town Hall on field " << "[" << i << "] [" << j << "]" << endl;
-						playerPopulation += 10;
+//						playerPopulation += 10;
 						isTownHall = true;
 						if (i < 9) {
 							mapFieldsBuildings[i+1][j] = "storage";
@@ -1066,7 +1085,6 @@ void MAP_GENERATOR() {
 	}
 }
 
-
 void ADD_BUILDING(int x, int y, int id, string name) {
 	if (name == "storage") {	//MAGAZYN NIE MO¯E BYC NA WODZIE LUB NA INNYM BUDYNKU \/
 		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
@@ -1100,7 +1118,7 @@ void ADD_BUILDING(int x, int y, int id, string name) {
 			playerWoodValue -= buildingsPriceWood[id];
 			playerStoneValue -= buildingsPriceStone[id];
 			playerIronValue -= buildingsPriceIron[id];
-			playerPopulation += 4;
+//			playerPopulation += 4;
 			workField[x][y] = true;
 			SET_TEXT(incode);
 			NEXT_TURN();
@@ -1113,7 +1131,7 @@ void ADD_BUILDING(int x, int y, int id, string name) {
 			playerWoodValue -= buildingsPriceWood[id];
 			playerStoneValue -= buildingsPriceStone[id];
 			playerIronValue -= buildingsPriceIron[id];
-			playerPopulation += 7;
+//			playerPopulation += 7;
 			workField[x][y] = true;
 			SET_TEXT(incode);
 			NEXT_TURN();
@@ -1126,7 +1144,7 @@ void ADD_BUILDING(int x, int y, int id, string name) {
 			playerWoodValue -= buildingsPriceWood[id];
 			playerStoneValue -= buildingsPriceStone[id];
 			playerIronValue -= buildingsPriceIron[id];
-			playerPopulation += 12;
+//			playerPopulation += 12;
 			workField[x][y] = true;
 			SET_TEXT(incode);
 			NEXT_TURN();
@@ -1210,6 +1228,7 @@ void ADD_BUILDING(int x, int y, int id, string name) {
 			NEXT_TURN();
 		}
 	}
+	CHECK_STATUS_1();
 }
 
 void REMOVE_BUILDING(int x, int y, int id) {
@@ -1222,24 +1241,32 @@ void REMOVE_BUILDING(int x, int y, int id) {
 }
 
 void UPGRADE_BUILDING(int x, int y, string name) {
-	if (name == "storage") {
+	if (name == "storage") { UPGRADE_BUILDING_MAIN(x, y, 200, 200, 125); }
+	else if (name == "simpleHouse") { UPGRADE_BUILDING_MAIN(x, y, 50, 50, 50); }
+	else if (name == "woodenHouse") { UPGRADE_BUILDING_MAIN(x, y, 200, 50, 50); }
+	else if (name == "stoneHouse") { UPGRADE_BUILDING_MAIN(x, y, 50, 200, 100); }
+}
 
-		if (playerWoodValue >= 200 && playerStoneValue >= 200 && playerIronValue >= 125) {
-			upgradeBuilding[x][y] = true;
-			playerWoodValue -= 200;	playerStoneValue -= 200; playerIronValue -= 125;
-		}
-
-		NEXT_TURN();
+void UPGRADE_BUILDING_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost) {
+	if (playerWoodValue >= woodCost && playerStoneValue >= stoneCost && playerIronValue >= ironCost) {
+		upgradeBuilding[x][y] = true;
+		playerWoodValue -= woodCost;	playerStoneValue -= stoneCost; playerIronValue -= ironCost;
 	}
+	NEXT_TURN();
 }
 
 void UPGRADE_BUILDING_COST(int x, int y, string name) {
-	if (name == "storage" && !upgradeBuilding[x][y]) {
-		txt[0][13].setFillColor(Color::Red);
-		txt[0][13].setPosition(1135, 60);		txt[0][13].setString("-200");		window.draw(txt[0][13]);
-		txt[0][13].setPosition(1135, 60 + 50);	txt[0][13].setString("-200");		window.draw(txt[0][13]);
-		txt[0][13].setPosition(1135, 60 + 100);	txt[0][13].setString("-125");		window.draw(txt[0][13]);
-	}
+	if (name == "storage" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 200, 200, 125); }
+	if (name == "simpleHouse" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 50, 50, 50); }
+	if (name == "woodenHouse" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 200, 50, 50); }
+	if (name == "stoneHouse" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 50, 200, 100); }
+}
+
+void UPGRADE_BUILDING_COST_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost) {
+	txt[0][13].setFillColor(Color::Red);
+	txt[0][13].setPosition(1135, 60);		txt[0][13].setString("-" + TO_STRINGSTREAM(woodCost));		window.draw(txt[0][13]);
+	txt[0][13].setPosition(1135, 60 + 50);	txt[0][13].setString("-" + TO_STRINGSTREAM(stoneCost));		window.draw(txt[0][13]);
+	txt[0][13].setPosition(1135, 60 + 100);	txt[0][13].setString("-" + TO_STRINGSTREAM(ironCost));		window.draw(txt[0][13]);
 }
 
 void CHECK_STATUS_1() {
@@ -1248,15 +1275,26 @@ void CHECK_STATUS_1() {
 	playerIronCapacity = 150 * buildingsAmount[1];
 	playerFoodCapacity = (1000 * buildingsAmount[1]) + 200;
 
+	playerPopulation = 11;
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
-			if (upgradeBuilding[i][j] == true) {
-				if (mapFieldsBuildings[i][j] == "storage") {
-					playerWoodCapacity += 500;
-					playerStoneCapacity += 350;
-					playerIronCapacity += 200;
-					playerFoodCapacity += 800;
-				}
+			if (mapFieldsBuildings[i][j] == "storage" && upgradeBuilding[i][j]) {
+				playerWoodCapacity += 500;
+				playerStoneCapacity += 350;
+				playerIronCapacity += 200;
+				playerFoodCapacity += 800;
+			}
+			if (mapFieldsBuildings[i][j] == "simpleHouse") {
+				if (!upgradeBuilding[i][j]) playerPopulation += 4;
+				else playerPopulation += 8;
+			}
+			if (mapFieldsBuildings[i][j] == "woodenHouse") {
+				if (!upgradeBuilding[i][j]) playerPopulation += 7;
+				else playerPopulation += 12;
+			}
+			if (mapFieldsBuildings[i][j] == "stoneHouse") {
+				if (!upgradeBuilding[i][j]) playerPopulation += 12;
+				else playerPopulation += 24;
 			}
 		}
 	}
@@ -1309,6 +1347,43 @@ void PLACE_BUILDING_MAIN(int spIdX, int spIdY, int priceId) {
 	txt[0][13].setPosition(1135, 60 + 50);	txt[0][13].setString("-" + TO_STRINGSTREAM(buildingsPriceStone[priceId]));		window.draw(txt[0][13]);
 	txt[0][13].setPosition(1135, 60 + 100);	txt[0][13].setString("-" + TO_STRINGSTREAM(buildingsPriceIron[priceId]));		window.draw(txt[0][13]);
 	window.draw(sp[spIdX][spIdY]);
+	CHECK_STATUS_1();
+}
+
+void FOOD_MORE() {
+	sp[5][46].setPosition(400, 55);
+	window.draw(sp[5][46]);
+	for (int j = 0; j < 1; j++) {
+		for (int i = 0; i < 3; i++) {
+			sp[2][i].setPosition(415, 70 + (30 * i));
+			window.draw(sp[2][i]);
+			switch (i) {
+			case 0:	//WHEAT
+				if (buildingsAmount[8] > 0) FOOD_MORE_MAIN(i, j, true);
+				else FOOD_MORE_MAIN(i, j, false);
+				break;
+			case 1: //FISH
+				if (buildingsAmount[9] > 0) FOOD_MORE_MAIN(i, j, true);
+				else FOOD_MORE_MAIN(i, j, false);
+				break;
+			case 2: //MEAT
+				if (buildingsAmount[10] > 0) FOOD_MORE_MAIN(i, j, true);
+				else FOOD_MORE_MAIN(i, j, false);
+				break;
+			}
+		}
+	}
+}
+
+void FOOD_MORE_MAIN(int i, int j, bool YesOrNo) {
+	if (YesOrNo) {
+		sp[2][50].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
+		window.draw(sp[2][50]);
+	}
+	if (!YesOrNo) {
+		sp[2][49].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
+		window.draw(sp[2][49]);
+	}
 }
 
 void NEXT_TURN() {
@@ -1514,9 +1589,18 @@ void FIELD_ZOOM(int i, int j) {
 		//Budynki \/
 		if (mapFieldsBuildings[i][j] == "townHall")	txt[0][12].setString("Building: Town Hall");
 		else if (mapFieldsBuildings[i][j] == "storage") txt[0][12].setString("Building: Storage");
-		else if (mapFieldsBuildings[i][j] == "simpleHouse") txt[0][12].setString("Building: Simple House (4 res.)");
-		else if (mapFieldsBuildings[i][j] == "woodenHouse") txt[0][12].setString("Building: Wooden House (7 res.)");
-		else if (mapFieldsBuildings[i][j] == "stoneHouse") txt[0][12].setString("Building: Stone House (12 res.)");
+		else if (mapFieldsBuildings[i][j] == "simpleHouse") {
+			if (!upgradeBuilding[i][j]) txt[0][12].setString("Building: Simple House (4 res.)");
+			else txt[0][12].setString("Building: Simple House (8 res.)");
+		}
+		else if (mapFieldsBuildings[i][j] == "woodenHouse") {
+			if (!upgradeBuilding[i][j]) txt[0][12].setString("Building: Wooden House (7 res.)");
+			else txt[0][12].setString("Building: Wooden House (14 res.)");
+		}
+		else if (mapFieldsBuildings[i][j] == "stoneHouse") {
+			if (!upgradeBuilding[i][j]) txt[0][12].setString("Building: Stone House (12 res.)");
+			else txt[0][12].setString("Building: Stone House (24 res.)");
+		}
 		else if (mapFieldsBuildings[i][j] == "lumberjack") {
 			if (workField[i][j]==true) txt[0][12].setString("Building: Lumberjack (" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.09) * 1)) + "/t.)");
 			else txt[0][12].setString("Building: Lumberjack -empty"); }
@@ -1530,8 +1614,6 @@ void FIELD_ZOOM(int i, int j) {
 		else if (mapFieldsBuildings[i][j] == "fish") txt[0][12].setString("Building: Fish (" + TO_STRINGSTREAM_DOUBLE(1.2 * (playerPopulation * 0.2)) + "/t.)");
 		else if (mapFieldsBuildings[i][j] == "hunting") txt[0][12].setString("Building: Hunting Cabine (" + TO_STRINGSTREAM_DOUBLE(1.3 * (playerPopulation * 0.2)) + "/t.)");
 		else txt[0][12].setString("Building: None");
-
-		if (upgradeBuilding[i][j])	txt[0][12].setString(txt[0][12].getString() + " -upgraded");
 	}
 	else if (lang == "polish") {
 		RELOAD_LANGUAGE_STRINGS();
@@ -1542,9 +1624,18 @@ void FIELD_ZOOM(int i, int j) {
 		//Budynki \/
 		if (mapFieldsBuildings[i][j] == "townHall")	txt[0][12].setString("Budynek: Ratusz");
 		else if (mapFieldsBuildings[i][j] == "storage") txt[0][12].setString("Budynek: Magazyn");
-		else if (mapFieldsBuildings[i][j] == "simpleHouse") txt[0][12].setString("Budynek: Prosty Dom (4 miesz.)");
-		else if (mapFieldsBuildings[i][j] == "woodenHouse") txt[0][12].setString("Budynek: Drewniany Dom (7 miesz.)");
-		else if (mapFieldsBuildings[i][j] == "stoneHouse") txt[0][12].setString("Budynek: Kamienny Dom (12 miesz.)");
+		else if (mapFieldsBuildings[i][j] == "simpleHouse") {
+			if (!upgradeBuilding[i][j]) txt[0][12].setString(L"Budynek: Zwyk³y Dom (4 miesz.)");
+			else txt[0][12].setString(L"Building: Zwyk³y Dom (8 miesz.)");
+		}
+		else if (mapFieldsBuildings[i][j] == "woodenHouse") {
+			if (!upgradeBuilding[i][j]) txt[0][12].setString("Budynek: Drewniany Dom (7 miesz.)");
+			else txt[0][12].setString("Budynek: Drewniany Dom (14 miesz.)");
+		}
+		else if (mapFieldsBuildings[i][j] == "stoneHouse") {
+			if (!upgradeBuilding[i][j]) txt[0][12].setString("Budynek: Kamienny Dom (12 miesz.)");
+			else txt[0][12].setString("Budynek: Kamienny Dom (24 miesz.)");
+		}
 		else if (mapFieldsBuildings[i][j] == "lumberjack") {
 			if (workField[i][j] == true) txt[0][12].setString("Budynek: Drwal (" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.09) * 1)) + "/t.)");
 			else txt[0][12].setString("Bdynek: Drwal -pusty");
@@ -1561,9 +1652,8 @@ void FIELD_ZOOM(int i, int j) {
 		else if (mapFieldsBuildings[i][j] == "fish") txt[0][12].setString("Budynek: Chata Rybaka (" + TO_STRINGSTREAM_DOUBLE(1.2 * (playerPopulation * 0.2)) + "/t.)");
 		else if (mapFieldsBuildings[i][j] == "hunting") txt[0][12].setString(L"Budynek: Chata £owcy (" + TO_STRINGSTREAM_DOUBLE(1.3 * (playerPopulation * 0.2)) + "/t.)");
 		else txt[0][12].setString("Budynek: Brak");
-
-		if (upgradeBuilding[i][j])	txt[0][12].setString(txt[0][12].getString() + " -ulepszony");
 	}
+	if (upgradeBuilding[i][j])	txt[0][12].setString(txt[0][12].getString() + " |^|");
 }
 
 void RELOAD_LANGUAGE_STRINGS() {

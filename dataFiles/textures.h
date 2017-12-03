@@ -30,6 +30,7 @@ void LOAD_TEXTURES(string incode) {	//£ADOWANIE TEKSTUR
 	tex[5][0].loadFromFile("data/graphics/form/checkbox.png");								//CHECKBOX
 	tex[5][1].loadFromFile("data/graphics/form/checkboxBird.png");							//CHECKBOX - PTASZEK
 	tex[5][2].loadFromFile("data/graphics/form/inputText.png");								//INPUT-TEXT
+	tex[5][46].loadFromFile("data/graphics/backgrounds/startGame-moreFood.png");			//MORE FOOD
 	tex[5][47].loadFromFile("data/graphics/backgrounds/startGame-food.png");				//FOOD
 	tex[5][48].loadFromFile("data/graphics/backgrounds/startGame-population.png");			//POPULACJA
 	tex[5][49].loadFromFile("data/graphics/backgrounds/startGame-materialsFrame.png");		//MATERIALS FRAME
@@ -50,7 +51,7 @@ void LOAD_TEXTURES(string incode) {	//£ADOWANIE TEKSTUR
 	tex[4][5].loadFromFile("data/graphics/backgrounds/startGame-bar.png");					//BAR
 	tex[4][6].loadFromFile("data/graphics/backgrounds/startGame-barOne.png");				//BAR - ONE						
 
-	tex[4][20].loadFromFile("data/graphics/icons/iconNextTurn.png");
+	tex[4][20].loadFromFile("data/graphics/icons/iconNextTurn.png");						//NEXT TURN
 	tex[4][21].loadFromFile("data/graphics/icons/<>.png");	
 	tex[4][22].loadFromFile("data/graphics/icons/iconRemove.png");							//REMOVE
 	tex[4][23].loadFromFile("data/graphics/icons/iconUpgrade.png");							//UPGRADE
@@ -87,6 +88,14 @@ void LOAD_TEXTURES(string incode) {	//£ADOWANIE TEKSTUR
 	tex[1][1].loadFromFile("data/graphics/icons/iconStone.png");							//IKONA - KAMIEÑ
 	tex[1][2].loadFromFile("data/graphics/icons/iconIron.png");								//IKONA - METAL
 	tex[1][3].loadFromFile("data/graphics/icons/iconUpgradeBuilding.png");					//UPGRADE BUILDING
+	tex[1][4].loadFromFile("data/graphics/icons/iconMoreButton.png");						//MORE BUTTON
+
+	tex[2][0].loadFromFile("data/graphics/icons/more/iconMoreWheat.png");					//iconMore WHEAT			
+	tex[2][1].loadFromFile("data/graphics/icons/more/iconMoreFish.png");					//iconMore FISH			
+	tex[2][2].loadFromFile("data/graphics/icons/more/iconMoreMeat.png");					//iconMore MEAT			
+	tex[2][49].loadFromFile("data/graphics/icons/more/iconMoreNo.png");						//iconMore NO
+	tex[2][50].loadFromFile("data/graphics/icons/more/iconMoreYes.png");					//iconMore YES
+
 
 }
 
