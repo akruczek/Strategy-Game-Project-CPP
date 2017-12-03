@@ -14,6 +14,8 @@ float playerIronPerTurn = ((playerPopulation / 21) * 3) * buildingsAmount[7];
 float playerFoodValue = 1000;
 float playerFoodCapacity = 1000;
 float playerFoodPerTurn = 0;
+bool playerFoodItems[30];
+// 0 - wheat, 1 - fish, 2 - meat, 3 - herb, 4 - forestFruit, 5 - flour
 int turn = 1;
 
 //g³ód, chata rybaka only on water

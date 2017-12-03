@@ -14,27 +14,27 @@ string mapName = "mapName";
 string mapFieldsBuildings[10][10];
 string buildingsStrings[50] = { "townHall", "storage", "simpleHouse", "woodenHouse", "stoneHouse", 
 								"lumberjack", "quarry", "mine", "farm", "fish", 
-								"hunting"};
+								"hunting", "gather", "windmill"};
 int buildingsAmount[50];
 // 0 - townHall, 1 - storage, 2 - simpleHouse, 3 - WoodenHouse, 4 - StoneHouse, 
 // 5 - lumberjack, 6 - quarry, 7 - mine, 8 - farm, 9 - fish, 10 - hunting
-// 10 - hunting
+// 10 - hunting, 11 - gather, 12 - windmill
 
 int buildingsPriceWood[50] = { 0, 50, 20, 30, 30,
 							   10, 55, 50, 20, 35,
-							   35};
+							   35, 40, 55};
 
 int buildingsPriceStone[50] = { 0, 25, 5, 15, 30,
 								5, 5, 15, 5, 15,
-								15};
+								15, 10, 45};
 
 int buildingsPriceIron[50] = { 0, 10, 0, 5, 20, 
 							   0, 15, 5, 0, 5,
-							   10};
+							   10, 0, 25};
 
 // 0 - (w:0, s:0, i:0) 1 - (w:50, s:25, i:10), 2 - (w:20, s:5, i:0), 3 - (w:30, s:15, i:5), 4 - (w:30, s:30, i:20)
 // 5 - (w:10, s:5, i:0), 6 - (w:55, s:5, i:15), 7 - (w:50, s:15, i:5), 8 - (w:20, s:5, i:0), 9 - (w:35, s:15, i:5)
-// 10 - (w:35, :15, i:10)
+// 10 - (w:35, :15, i:10), 11 - (w:40, s:10, i:0), 12 - (w:55, s:45, i:25)
 
 bool upgradeBuilding[10][10];
 

@@ -76,8 +76,8 @@ void LOAD_TEXTURES(string incode) {	//£ADOWANIE TEKSTUR
 	tex[4][40].loadFromFile("data/graphics/icons/iconFarm.png");							//FARMA
 	tex[4][41].loadFromFile("data/graphics/icons/iconFish.png");							//FISH
 	tex[4][42].loadFromFile("data/graphics/icons/iconHunting.png");							//HUNTING
-	tex[4][43].loadFromFile("data/graphics/icons/<>.png");
-	tex[4][44].loadFromFile("data/graphics/icons/<>.png");
+	tex[4][43].loadFromFile("data/graphics/icons/iconGather.png");							//GATHER
+	tex[4][44].loadFromFile("data/graphics/icons/iconWindmill.png");						//M£YN
 	tex[4][45].loadFromFile("data/graphics/icons/<>.png");
 	tex[4][46].loadFromFile("data/graphics/icons/<>.png");
 	tex[4][47].loadFromFile("data/graphics/icons/<>.png");
@@ -93,6 +93,9 @@ void LOAD_TEXTURES(string incode) {	//£ADOWANIE TEKSTUR
 	tex[2][0].loadFromFile("data/graphics/icons/more/iconMoreWheat.png");					//iconMore WHEAT			
 	tex[2][1].loadFromFile("data/graphics/icons/more/iconMoreFish.png");					//iconMore FISH			
 	tex[2][2].loadFromFile("data/graphics/icons/more/iconMoreMeat.png");					//iconMore MEAT			
+	tex[2][3].loadFromFile("data/graphics/icons/more/iconMoreHerb.png");					//iconMore HERB
+	tex[2][4].loadFromFile("data/graphics/icons/more/iconMoreForestFruit.png");				//iconMore FOREST FRUIT	
+	tex[2][5].loadFromFile("data/graphics/icons/more/iconMoreFlour.png");					//iconMore FLOUR
 	tex[2][49].loadFromFile("data/graphics/icons/more/iconMoreNo.png");						//iconMore NO
 	tex[2][50].loadFromFile("data/graphics/icons/more/iconMoreYes.png");					//iconMore YES
 
