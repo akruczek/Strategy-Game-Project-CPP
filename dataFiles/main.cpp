@@ -341,6 +341,7 @@ void START_GAME() {
 	bool removingBuildings = false;
 	bool upgradingBuildings = false;
 	bool moreFood = false;
+	bool moreMaterials = false;
 	int placeBuildingId = 0;
 	string placeBuildingName = "";
 	CHECK_STATUS_1();
@@ -406,7 +407,7 @@ void START_GAME() {
 				}
 
 				//YES_NO BOX
-				if (yesNoBoxActive == true) {
+				if (yesNoBoxActive) {
 					if (mouseX >= window.getSize().x / 2 - 200 + 60 && mouseX <= window.getSize().x / 2 - 200 + 150 && mouseY >= window.getSize().y / 2 - 100 + 122 && mouseY <= window.getSize().y / 2 - 100 + 169) {
 						window.clear();
 						MAIN_MENU();
@@ -417,7 +418,7 @@ void START_GAME() {
 				}
 
 				//PLACE BUILDING
-				if (placeBuilding == true) {
+				if (placeBuilding) {
 					for (int i = 0; i < 10; i++) {
 						for (int j = 0; j < 10; j++) {
 							if (mouseX >= 50 + (65 * i) && mouseX <= 50 + (65 * i) + 65 && mouseY >= 50 + (65 * j) && mouseY <= 50 + (65 * j) + 65) {
@@ -524,8 +525,13 @@ void START_GAME() {
 				if (event.type == Event::KeyPressed && event.key.code == Keyboard::B) { CHEATS(); }
 
 				//MORE BUTTON (FOOD)
-				if (mouseX >= 675 && mouseX <= 691 && mouseY >= 32 && mouseY <= 48) { if (!moreFood) moreFood = true; else moreFood = false; }
+				if (mouseX >= 675 && mouseX <= 691 && mouseY >= 32 && mouseY <= 48) { moreFood = !moreFood ? true : false; }
 				if (mouseX >= (sp[5][46].getPosition().x + 288) && mouseX <= (sp[5][46].getPosition().x + 295) && mouseY >= (sp[5][46].getPosition().y+3) && mouseY <= (sp[5][46].getPosition().y + 11) && moreFood)	moreFood = false;
+
+				//MORE BUTTON (MATERIALS)
+				if (mouseX >= 1253 && mouseX <= 1273 && mouseY >= 177 && mouseY <= 196) { moreMaterials = !moreMaterials ? true : false; }
+				if (mouseX >= (sp[5][45].getPosition().x + 288) && mouseX <= (sp[5][45].getPosition().x + 295) && mouseY >= (sp[5][45].getPosition().y + 3) && mouseY <= (sp[5][45].getPosition().y + 11) && moreFood)	moreFood = false;
+				
 			}
 			window.clear(Color::White);
 
@@ -758,12 +764,17 @@ void START_GAME() {
 			for (int i = 9; i < 12; i++)
 				window.draw(txt[0][i]);
 
-			//[!] MORE MATERIALS BUTTON [!]
-			//moreButton
+			//moreButton (food)
 			sp[1][4].setPosition(675, 32);
-			if (mouseX >= 675 && mouseX <= 691 && mouseY >= 32 && mouseY <= 48)	sp[1][4].setColor(colorSp1_4);
+			if (mouseX >= 646 && mouseX <= 691 && mouseY >= 5 && mouseY <= 48)	sp[1][4].setColor(colorSp1_4);
 			else sp[1][4].setColor(Color::Transparent);
 			window.draw(sp[1][4]);
+			//moreButton (materials)
+			sp[1][4].setPosition(1253, 177);
+			if (mouseX >= 1176 && mouseX <= 1271 && mouseY >= 52 && mouseY <= 195)	sp[1][4].setColor(colorSp1_4);
+			else sp[1][4].setColor(Color::Transparent);
+			window.draw(sp[1][4]);
+
 
 			if (yesNoBoxActive == true) {
 				if (lang == "english")
@@ -835,8 +846,9 @@ void START_GAME() {
 				if (upgradingBuildings) { sp[4][23].setPosition(mouseX + 10, mouseY - 10); window.draw(sp[4][23]); }
 			}
 
-			//MORE FOOD
+			//MORE FOOD, MORE MATERIALS
 			if (moreFood)	FOOD_MORE();
+			if (moreMaterials)	MATERIALS_MORE();
 
 			window.display();
 		}
@@ -1345,6 +1357,49 @@ void FOOD_MORE() {
 }
 
 void FOOD_MORE_MAIN(int i, int j, bool YesOrNo) {
+	if (YesOrNo) {
+		sp[2][50].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
+		window.draw(sp[2][50]);
+	}
+	if (!YesOrNo) {
+		sp[2][49].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
+		window.draw(sp[2][49]);
+	}
+}
+
+void MATERIALS_MORE() {
+	sp[5][46].setPosition(403, 47);
+	window.draw(sp[5][46]);
+	for (int j = 0; j < 1; j++) {
+		for (int i = 0; i < 6; i++) {
+			sp[2][i].setPosition(417, 70 + (30 * i));
+			window.draw(sp[2][i]);
+			switch (i) {
+			case 0:	//LUMBER?
+				
+				break;
+			case 1: 
+				
+				break;
+			case 2: 
+				
+				break;
+			case 3:	
+				
+				break;
+			case 4: 
+				
+				break;
+			case 5: 
+				
+				break;
+
+			}
+		}
+	}
+}
+
+void MATERIALS_MORE_MAIN(int i, int j, bool YesOrNo) {
 	if (YesOrNo) {
 		sp[2][50].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
 		window.draw(sp[2][50]);

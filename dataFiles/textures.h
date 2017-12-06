@@ -30,6 +30,7 @@ void LOAD_TEXTURES(string incode) {	//£ADOWANIE TEKSTUR
 	tex[5][0].loadFromFile("data/graphics/form/checkbox.png");								//CHECKBOX
 	tex[5][1].loadFromFile("data/graphics/form/checkboxBird.png");							//CHECKBOX - PTASZEK
 	tex[5][2].loadFromFile("data/graphics/form/inputText.png");								//INPUT-TEXT
+	tex[5][45].loadFromFile("data/graphics/backgrounds/startGame-moreMaterials.png");		//MORE MATERIALS
 	tex[5][46].loadFromFile("data/graphics/backgrounds/startGame-moreFood.png");			//MORE FOOD
 	tex[5][47].loadFromFile("data/graphics/backgrounds/startGame-food.png");				//FOOD
 	tex[5][48].loadFromFile("data/graphics/backgrounds/startGame-population.png");			//POPULACJA
