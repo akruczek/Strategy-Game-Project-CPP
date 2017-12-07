@@ -8,9 +8,14 @@
 -commit 03.12.2017-2
 --[+] Buildings: -Gather's Hut, -Windmill
 --[+] 'moreFood' Menu
---[+] New items type ('playerFoodItems')
+--[+] New items type (Food)
 --[+] Food items: wheat, fish, herb, forestFruit, flour
 
 -commit 06.12.2017
---[+] 'moreMaterials' section (incode)
+--[+] 'moreMaterials' Menu
+
+-commit 07.12.2017
+--[+] Carpenter Building
+--[+] New items type (Materials)
+--[*] ...optimalization
 */

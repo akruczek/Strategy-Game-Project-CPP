@@ -20,24 +20,18 @@ void MAIN_MENU(), MAIN_MENU_SETTINGS(), MAIN_MENU_LOAD_GAME(), MAIN_MENU_NEW_GAM
 void CHECKBOX(int posX, int posY, bool argumanet[], wstring checkboxName, int boxesNumber, wstring box1, wstring box2, wstring box3, wstring box4, wstring box5, wstring box6);
 string INPUT_TEXT(int posX, int posY, wstring inputTextName, string outputString);
 void START_GAME();
-void MAP_GENERATOR();
 void CHEATS();
+void SHOW_BUILD();
+void SHOW_BUILD_MAIN(int x, int y, int i, int j);
 void FIELD_ZOOM(int i, int j);
 void YES_NO_BOX(wstring boxContent, wstring boxExtraContent);
 void RELOAD_LANGUAGE_STRINGS();
-void ADD_BUILDING(int x, int y, int id, string name);
-void ADD_BUILDING_MAIN(int x, int y, int id, string name);
-void REMOVE_BUILDING(int x, int y, int id);
-void UPGRADE_BUILDING(int x, int y, string name);
-void UPGRADE_BUILDING_COST(int x, int y, string name);
 void NEXT_TURN();
-void PLACE_BUILDING(string building);
-void PLACE_BUILDING_MAIN(int spIdX, int spIdY, int priceId);
 void CHECK_STATUS_1();
-void UPGRADE_BUILDING_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost);
-void UPGRADE_BUILDING_COST_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost);
 void FOOD_MORE();
 void FOOD_MORE_MAIN(int i, int j, bool YesOrNo);
+void MATERIALS_MORE();
+void MATERIALS_MORE_MAIN(int i, int j, bool YesOrNo);
 bool yesNoBoxActive = false;
 bool difficulty[3] = { 1, 0, 0 };
 bool mapSize[3] = { 0, 1, 0 };
@@ -355,52 +349,54 @@ void START_GAME() {
 					placeBuilding = false;			pickingMaterialsWood = false;	pickingMaterialsStone = false; pickingMaterialsIron = false;
 					pickingMaterialsFood = false;	removingBuildings = false;		upgradingBuildings = false;
 				}
-				for (int i = 0; i < 10; i++) {
-					for (int j = 0; j < 3; j++) {
-						if (mouseX >= 720 + (55 * i) && mouseX <= 770 + (55 * i) && mouseY >= 660 - (55 * j) && mouseY <= 710 - (55 * j)) {
-							switch (j) {
-							case 0:	//PIERWSZY WIERSZ OD DO£U
-								switch (i) {
-								case 0: NEXT_TURN(); break;
-								case 1: break;
-								case 2: removingBuildings = true; break;
-								case 3: upgradingBuildings = true; break;
-								case 4: pickingMaterialsFood = true; break;
-								case 5: pickingMaterialsWood = true; break;
-								case 6: pickingMaterialsStone = true; break;
-								case 7: pickingMaterialsIron = true; break;
-								case 8: CHEATS(); break;	//INFO
-								case 9: yesNoBoxActive = true; break;
+				if (!moreFood && !moreMaterials) {
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 3; j++) {
+							if (mouseX >= 720 + (55 * i) && mouseX <= 770 + (55 * i) && mouseY >= 660 - (55 * j) && mouseY <= 710 - (55 * j)) {
+								switch (j) {
+								case 0:	//PIERWSZY WIERSZ OD DO£U
+									switch (i) {
+									case 0: NEXT_TURN(); break;
+									case 1: break;
+									case 2: removingBuildings = true; break;
+									case 3: upgradingBuildings = true; break;
+									case 4: pickingMaterialsFood = true; break;
+									case 5: pickingMaterialsWood = true; break;
+									case 6: pickingMaterialsStone = true; break;
+									case 7: pickingMaterialsIron = true; break;
+									case 8: CHEATS(); break;	//INFO
+									case 9: yesNoBoxActive = true; break;
+									}
+									break;
+								case 1:	//DRUGI WIERSZ OD DO£U
+									switch (i) {
+									case 0: placeBuilding = true; placeBuildingName = "simpleHouse"; placeBuildingId = 2; break;
+									case 1: placeBuilding = true; placeBuildingName = "woodenHouse"; placeBuildingId = 3; break;
+									case 2: placeBuilding = true; placeBuildingName = "stoneHouse"; placeBuildingId = 4; break;
+									case 3: placeBuilding = true; placeBuildingName = "lumberjack"; placeBuildingId = 5; break;
+									case 4: placeBuilding = true; placeBuildingName = "quarry"; placeBuildingId = 6; break;
+									case 5: placeBuilding = true; placeBuildingName = "mine"; placeBuildingId = 7; break;
+									case 6: break;
+									case 7: break;
+									case 8: placeBuilding = true; placeBuildingName = "storage"; placeBuildingId = 1; break;
+									case 9: /*TOWN HALL*/break;
+									}
+									break;
+								case 2:	//TRZECI WIERSZ OD DO£U
+									switch (i) {
+									case 0: placeBuilding = true; placeBuildingName = "farm"; placeBuildingId = 8; break;
+									case 1: placeBuilding = true; placeBuildingName = "fish"; placeBuildingId = 9; break;
+									case 2: placeBuilding = true; placeBuildingName = "hunting"; placeBuildingId = 10; break;
+									case 3: placeBuilding = true; placeBuildingName = "gather"; placeBuildingId = 11; break;
+									case 4: placeBuilding = true; placeBuildingName = "windmill"; placeBuildingId = 12; break;
+									case 5: placeBuilding = true; placeBuildingName = "carpenter"; placeBuildingId = 13; break;
+									case 6: break;
+									case 7: break;
+									case 8: break;
+									case 9: break;
+									}
+									break;
 								}
-								break;
-							case 1:	//DRUGI WIERSZ OD DO£U
-								switch (i) {
-								case 0: placeBuilding = true; placeBuildingName = "simpleHouse"; placeBuildingId = 2; break;
-								case 1: placeBuilding = true; placeBuildingName = "woodenHouse"; placeBuildingId = 3; break;
-								case 2: placeBuilding = true; placeBuildingName = "stoneHouse"; placeBuildingId = 4; break;
-								case 3: placeBuilding = true; placeBuildingName = "lumberjack"; placeBuildingId = 5; break;
-								case 4: placeBuilding = true; placeBuildingName = "quarry"; placeBuildingId = 6; break;
-								case 5: placeBuilding = true; placeBuildingName = "mine"; placeBuildingId = 7; break;
-								case 6: break;
-								case 7: break;
-								case 8: placeBuilding = true; placeBuildingName = "storage"; placeBuildingId = 1; break;
-								case 9: /*TOWN HALL*/break;
-								}
-								break;
-							case 2:	//TRZECI WIERSZ OD DO£U
-								switch (i) {
-								case 0: placeBuilding = true; placeBuildingName = "farm"; placeBuildingId = 8; break;
-								case 1: placeBuilding = true; placeBuildingName = "fish"; placeBuildingId = 9; break;
-								case 2: placeBuilding = true; placeBuildingName = "hunting"; placeBuildingId = 10; break;
-								case 3: placeBuilding = true; placeBuildingName = "gather"; placeBuildingId = 11; break;
-								case 4: placeBuilding = true; placeBuildingName = "windmill"; placeBuildingId = 12; break;
-								case 5: break;
-								case 6: break;
-								case 7: break;
-								case 8: break;
-								case 9: break;
-								}
-								break;
 							}
 						}
 					}
@@ -525,12 +521,14 @@ void START_GAME() {
 				if (event.type == Event::KeyPressed && event.key.code == Keyboard::B) { CHEATS(); }
 
 				//MORE BUTTON (FOOD)
+				if (mouseX <= sp[5][46].getPosition().x || (mouseX >= sp[5][46].getPosition().x + sp[5][46].getGlobalBounds().width) || mouseY <= sp[5][46].getPosition().y || (mouseY >= sp[5][46].getPosition().y + sp[5][46].getGlobalBounds().height)) moreFood = false;
 				if (mouseX >= 675 && mouseX <= 691 && mouseY >= 32 && mouseY <= 48) { moreFood = !moreFood ? true : false; }
 				if (mouseX >= (sp[5][46].getPosition().x + 288) && mouseX <= (sp[5][46].getPosition().x + 295) && mouseY >= (sp[5][46].getPosition().y+3) && mouseY <= (sp[5][46].getPosition().y + 11) && moreFood)	moreFood = false;
 
 				//MORE BUTTON (MATERIALS)
+				if (mouseX <= sp[5][45].getPosition().x || (mouseX >= sp[5][45].getPosition().x + sp[5][45].getGlobalBounds().width) || mouseY <= sp[5][45].getPosition().y || (mouseY >= sp[5][45].getPosition().y + sp[5][45].getGlobalBounds().height)) moreMaterials = false;
 				if (mouseX >= 1253 && mouseX <= 1273 && mouseY >= 177 && mouseY <= 196) { moreMaterials = !moreMaterials ? true : false; }
-				if (mouseX >= (sp[5][45].getPosition().x + 288) && mouseX <= (sp[5][45].getPosition().x + 295) && mouseY >= (sp[5][45].getPosition().y + 3) && mouseY <= (sp[5][45].getPosition().y + 11) && moreFood)	moreFood = false;
+				if (mouseX >= (sp[5][45].getPosition().x + 288) && mouseX <= (sp[5][45].getPosition().x + 295) && mouseY >= (sp[5][45].getPosition().y + 3) && mouseY <= (sp[5][45].getPosition().y + 11) && moreMaterials)	moreMaterials = false;
 				
 			}
 			window.clear(Color::White);
@@ -604,7 +602,7 @@ void START_GAME() {
 			}
 
 			//YWŒWIETLANIE ZBLI¯ENIA POLA
-			if (!yesNoBoxActive && !moreFood) {
+			if (!yesNoBoxActive && !moreFood && !moreMaterials) {
 				if (mouseX >= 50 && mouseX <= 700 && mouseY >= 50 && mouseY <= 700) {
 					for (int i = 0; i < 10; i++) {
 						for (int j = 0; j < 10; j++) {
@@ -650,58 +648,7 @@ void START_GAME() {
 			window.draw(txt[5][10]);
 
 			//IKONY BUDYNKÓW \/
-			for (int i = 0; i < 10; i++) {
-				for (int j = 0; j < 10; j++) {
-					for (int k = 0; k < 1; k++) {
-						if (mapFieldsBuildings[i][j] == "townHall") {
-							sp[4][39].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][39].setColor(Color::Black);	window.draw(sp[4][39]);  break;
-						}
-						if (mapFieldsBuildings[i][j] == "storage") {
-							sp[4][38].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][38].setColor(Color::Black);	window.draw(sp[4][38]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "simpleHouse") {
-							sp[4][30].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][30].setColor(Color::Black);	window.draw(sp[4][30]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "woodenHouse") {
-							sp[4][31].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][31].setColor(Color::Black);	window.draw(sp[4][31]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "stoneHouse") {
-							sp[4][32].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][32].setColor(Color::Black);	window.draw(sp[4][32]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "lumberjack") {
-							sp[4][33].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][33].setColor(Color::Black);
-							if (mapFieldsWoodValue[i][j] < 1) sp[4][33].setColor(darkRed);
-							window.draw(sp[4][33]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "quarry") {
-							sp[4][34].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][34].setColor(Color::Black);
-							if (mapFieldsStoneValue[i][j] < 1) sp[4][34].setColor(darkRed);
-							window.draw(sp[4][34]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "mine") {
-							sp[4][35].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][35].setColor(Color::Black);
-							if (mapFieldsIronValue[i][j] < 1) sp[4][35].setColor(darkRed);
-							window.draw(sp[4][35]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "farm") {
-							sp[4][40].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][40].setColor(Color::Black);	window.draw(sp[4][40]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "fish") {
-							sp[4][41].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][41].setColor(Color::Black);	window.draw(sp[4][41]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "hunting") {
-							sp[4][42].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][42].setColor(Color::Black);	window.draw(sp[4][42]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "gather") {
-							sp[4][43].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][43].setColor(Color::Black);	window.draw(sp[4][43]); break;
-						}
-						if (mapFieldsBuildings[i][j] == "windmill") {
-							sp[4][44].setPosition(52 + (65 * i), 57 + (65 * j));	sp[4][44].setColor(Color::Black);	window.draw(sp[4][44]); break;
-						}
-					}
-					if (upgradeBuilding[i][j] == true) { sp[1][3].setPosition(72 + (65 * i), 54 + (65 * j)); window.draw(sp[1][3]); }
-				}
-			}
+			SHOW_BUILD();
 
 			sp[5][47].setPosition(645, 3);
 			window.draw(sp[5][47]);
@@ -855,260 +802,41 @@ void START_GAME() {
 	}
 }
 
-void MAP_GENERATOR() {
-	loadGenerateMap = 1;	//infoline
-	cout << "Map Generation..." << endl;	//infoline
-	for (int i = 0; i < 10; i++)
-		for (int j = 0; j < 10; j++)
-			mapFieldsBuildings[i][j] = "";
-	for (int i = 0; i < 20; i++) {
-		buildingsAmount[i] = 0;
-	}
-	bool isTownHall = false;
-	playerPopulation = 0;
+void SHOW_BUILD() {
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
-			mainTime = mainClock.getElapsedTime();
-			srand((int)mainTime.asMilliseconds());
-			cout << loadGenerateMap << "%, " << "Seed: " << rand() % 1000 + 1 << ", ";	//infoline
 			for (int k = 0; k < 1; k++) {
-/*500 - 50%*/	if (((rand() % 1000) + 1) % 2 == 0) {
-					mapFieldsNames[i][j] = "grass";
-					cout << "Field " << "[" << i << "]" << "[" << j << "]" << ": " << mapFieldsNames[i][j] << ", "; //infoline
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMilliseconds());
-					mapFieldsWoodCapacity[i][j] = (rand() % 50) + 75;
-					mapFieldsWoodValue[i][j] = mapFieldsWoodCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "wood: " << mapFieldsWoodCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsStoneCapacity[i][j] = (rand() % 50) + 75;
-					mapFieldsStoneValue[i][j] = mapFieldsStoneCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "stone: " << mapFieldsStoneCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsIronCapacity[i][j] = (rand() % 50) + 75;
-					mapFieldsIronValue[i][j] = mapFieldsIronCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "iron: " << mapFieldsIronCapacity[i][j] << ", " << endl;
-					break;
-				}
-/*167 - 16.7%*/	if (((rand() % 1000) + 1) % 3 == 0) {
-					mapFieldsNames[i][j] = "dirt";
-					cout << "Field " << "[" << i << "]" << "[" << j << "]" << ": " << mapFieldsNames[i][j] << ", "; //infoline
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMilliseconds());
-					mapFieldsWoodCapacity[i][j] = ((rand() % 50) + 75)*0.8;
-					mapFieldsWoodValue[i][j] = mapFieldsWoodCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "wood: " << mapFieldsWoodCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsStoneCapacity[i][j] = ((rand() % 50) + 75)*0.8;
-					mapFieldsStoneValue[i][j] = mapFieldsStoneCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "stone: " << mapFieldsStoneCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsIronCapacity[i][j] = (rand() % 50) + 75;
-					mapFieldsIronValue[i][j] = mapFieldsIronCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "iron: " << mapFieldsIronCapacity[i][j] << ", " << endl;
-					break;
-				}
-/*95 - 9.5%*/	if (((rand() % 1000) + 1) % 5 == 0 || ((rand() % 1000) + 1) % 17 == 0 || ((rand() % 1000) + 1) % 19 == 0) {
-					mapFieldsNames[i][j] = "grass";	//WOLNE 9.5%
-					cout << "?Field " << "[" << i << "]" << "[" << j << "]" << ": " << mapFieldsNames[i][j] << ", "; //infoline
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMilliseconds());
-					mapFieldsWoodCapacity[i][j] = (rand() % 50) + 75;
-					mapFieldsWoodValue[i][j] = mapFieldsWoodCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "wood: " << mapFieldsWoodCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsStoneCapacity[i][j] = (rand() % 50) + 75;
-					mapFieldsStoneValue[i][j] = mapFieldsStoneCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "stone: " << mapFieldsStoneCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsIronCapacity[i][j] = (rand() % 50) + 75;
-					mapFieldsIronValue[i][j] = mapFieldsIronCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "iron: " << mapFieldsIronCapacity[i][j] << ", " << endl;
-					break;
-				}
-/*55 - 5.5%*/	if (((rand() % 1000) + 1) % 7 == 0 || ((rand() % 1000) + 1) % 23 == 0 || ((rand() % 1000) + 1) % 29 == 0 || ((rand() % 1000) + 1) % 31 == 0 || ((rand() % 1000) + 1) % 37 == 0) {
-					mapFieldsNames[i][j] = "mountain";
-					cout << "Field " << "[" << i << "]" << "[" << j << "]" << ": " << mapFieldsNames[i][j] << ", "; //infoline
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMilliseconds());
-					mapFieldsWoodCapacity[i][j] = ((rand() % 50) + 75)*0.65;
-					mapFieldsWoodValue[i][j] = mapFieldsWoodCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "wood: " << mapFieldsWoodCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsStoneCapacity[i][j] = ((rand() % 50) + 75)*4;
-					mapFieldsStoneValue[i][j] = mapFieldsStoneCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "stone: " << mapFieldsStoneCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsIronCapacity[i][j] = ((rand() % 50) + 75)*3.2;
-					mapFieldsIronValue[i][j] = mapFieldsIronCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "iron: " << mapFieldsIronCapacity[i][j] << ", " << endl;
-					break;
-				}
-/*36 - 3.6%*/	if (((rand() % 1000) + 1) % 11 == 0 || ((rand() % 1000) + 1) % 13 == 0 || ((rand() % 1000) + 1) % 41 == 0 || ((rand() % 1000) + 1) % 43 == 0 || ((rand() % 1000) + 1) % 47 == 0 || ((rand() % 1000) + 1) % 53 == 0 || ((rand() % 1000) + 1) % 59 == 0 || ((rand() % 1000) + 1) % 61 == 0 || ((rand() % 1000) + 1) % 67 == 0 || ((rand() % 1000) + 1) % 71 == 0 || ((rand() % 1000) + 1) % 73 == 0 || ((rand() % 1000) + 1) % 79 == 0) {
-					mapFieldsNames[i][j] = "water";
-					cout << "Field " << "[" << i << "]" << "[" << j << "]" << ": " << mapFieldsNames[i][j] << ", "; //infoline
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMilliseconds());
-					mapFieldsWoodCapacity[i][j] = ((rand() % 50) + 75)*0.1;
-					mapFieldsWoodValue[i][j] = mapFieldsWoodCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "wood: " << mapFieldsWoodCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsStoneCapacity[i][j] = ((rand() % 50) + 75)*0.1;
-					mapFieldsStoneValue[i][j] = mapFieldsStoneCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "stone: " << mapFieldsStoneCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsIronCapacity[i][j] = ((rand() % 50) + 75)*0.05;
-					mapFieldsIronValue[i][j] = mapFieldsIronCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "iron: " << mapFieldsIronCapacity[i][j] << ", " << endl;
-					break;
-				}
-/*147 - 14.7%*/	else {
-					mapFieldsNames[i][j] = "forest";
-					cout << "Field " << "[" << i << "]" << "[" << j << "]" << ": " << mapFieldsNames[i][j] << ", "; //infoline
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMilliseconds());
-					mapFieldsWoodCapacity[i][j] = ((rand() % 50) + 75)*2.4;
-					mapFieldsWoodValue[i][j] = mapFieldsWoodCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "wood: " << mapFieldsWoodCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsStoneCapacity[i][j] = ((rand() % 50) + 75)*1.1;
-					mapFieldsStoneValue[i][j] = mapFieldsStoneCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "stone: " << mapFieldsStoneCapacity[i][j] << ", ";
-
-					mainTime = mainClock.getElapsedTime();
-					srand((int)mainTime.asMicroseconds());
-					mapFieldsIronCapacity[i][j] = ((rand() % 50) + 75)*1.5;
-					mapFieldsIronValue[i][j] = mapFieldsIronCapacity[i][j];
-					cout << "(s:" << (rand() % 125) + 75 << ")" << "iron: " << mapFieldsIronCapacity[i][j] << ", " << endl;
-					break;
-				}
+				if (mapFieldsBuildings[i][j] == "townHall") { SHOW_BUILD_MAIN(4, 39, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "storage") { SHOW_BUILD_MAIN(4, 38, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "simpleHouse") { SHOW_BUILD_MAIN(4, 30, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "woodenHouse") { SHOW_BUILD_MAIN(4, 31, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "stoneHouse") { SHOW_BUILD_MAIN(4, 32, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "lumberjack") {
+					if (mapFieldsWoodValue[i][j] < 1) sp[4][33].setColor(darkRed);	SHOW_BUILD_MAIN(4, 33, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "quarry") {
+					if (mapFieldsStoneValue[i][j] < 1) sp[4][34].setColor(darkRed); SHOW_BUILD_MAIN(4, 34, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "mine") {
+					if (mapFieldsIronValue[i][j] < 1) sp[4][35].setColor(darkRed);
+					SHOW_BUILD_MAIN(4, 35, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "farm") { SHOW_BUILD_MAIN(4, 40, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "fish") { SHOW_BUILD_MAIN(4, 41, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "hunting") { SHOW_BUILD_MAIN(4, 42, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "gather") { SHOW_BUILD_MAIN(4, 43, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "windmill") { SHOW_BUILD_MAIN(4, 44, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "carpenter") { SHOW_BUILD_MAIN(4, 45, i, j); break; }
 			}
-			//RATUSZ I MAGAZYN \/
-			mainTime = mainClock.getElapsedTime();
-			srand((int)mainTime.asMilliseconds());
-			if (isTownHall == false) {
-				if (((rand() % 100) + 1) % 29 == 0 && mapFieldsNames[i][j] != "water") { 
-					ADD_BUILDING(i, j, 0, "townHall");
-					cout << "[!] Generated Town Hall on field " << "[" << i << "] [" << j << "]" << endl;
-//					playerPopulation += 10;
-					isTownHall = true;
-					if (i < 9) {
-						mapFieldsBuildings[i + 1][j] = "storage";
-						buildingsAmount[1]++;
-						playerWoodCapacity = 200 * buildingsAmount[1];
-						playerStoneCapacity = 175 * buildingsAmount[1];
-						playerIronCapacity = 150 * buildingsAmount[1];
-						cout << "[!] Generated Storage on field " << "[" << i + 1 << "] [" << j << "]" << endl;
-						if (mapFieldsNames[i + 1][j] == "water")	mapFieldsNames[i + 1][j] = "grass";
-					}
-					else if (i > 0) {
-						mapFieldsBuildings[i - 1][j] = "storage";
-						buildingsAmount[1]++;
-						playerWoodCapacity = 200 * buildingsAmount[1];
-						playerStoneCapacity = 175 * buildingsAmount[1];
-						playerIronCapacity = 150 * buildingsAmount[1];
-						cout << "[!] Generated Storage on field " << "[" << i - 1 << "] [" << j << "]" << endl;
-						if (mapFieldsNames[i - 1][j] == "water")	mapFieldsNames[i - 1][j] = "grass";
-					}
-				}
-				if (isTownHall == false && i > 8) {
-					if (((rand() % 100) + 1) % 3 == 0 && mapFieldsNames[i][j] != "water") {
-						ADD_BUILDING(i, j, 0, "townHall");
-						cout << "[!] Generated Town Hall on field " << "[" << i << "] [" << j << "]" << endl; 
-//						playerPopulation += 10;
-						isTownHall = true;
-						if (i < 9) {
-							mapFieldsBuildings[i + 1][j] = "storage";
-							buildingsAmount[1]++;
-							playerWoodCapacity = 200 * buildingsAmount[1];
-							playerStoneCapacity = 175 * buildingsAmount[1];
-							playerIronCapacity = 150 * buildingsAmount[1];
-							cout << "[!] Generated Storage on field " << "[" << i + 1 << "] [" << j << "]" << endl;
-							if (mapFieldsNames[i + 1][j] == "water")	mapFieldsNames[i + 1][j] = "grass";
-						}
-						else if (i > 0) {
-							mapFieldsBuildings[i - 1][j] = "storage";
-							buildingsAmount[1]++;
-							playerWoodCapacity = 200 * buildingsAmount[1];
-							playerStoneCapacity = 175 * buildingsAmount[1];
-							playerIronCapacity = 150 * buildingsAmount[1];
-							cout << "[!] Generated Storage on field " << "[" << i - 1 << "] [" << j << "]" << endl;
-							if (mapFieldsNames[i - 1][j] == "water")	mapFieldsNames[i - 1][j] = "grass";
-						}
-					}
-					if (isTownHall == false && i == 9 && j == 9) {
-						ADD_BUILDING(i, j, 0, "townHall");
-						cout << "[!] Generated Town Hall on field " << "[" << i << "] [" << j << "]" << endl;
-//						playerPopulation += 10;
-						isTownHall = true;
-						if (i < 9) {
-							mapFieldsBuildings[i+1][j] = "storage";
-							buildingsAmount[1]++;
-							playerWoodCapacity = 200 * buildingsAmount[1];
-							playerStoneCapacity = 175 * buildingsAmount[1];
-							playerIronCapacity = 150 * buildingsAmount[1];
-							cout << "[!] Generated Storage on field " << "[" << i + 1 << "] [" << j << "]" << endl;
-							if (mapFieldsNames[i + 1][j] == "water")	mapFieldsNames[i + 1][j] = "grass";
-						}
-						else if (i > 0) {
-							mapFieldsBuildings[i - 1][j] = "storage";
-							buildingsAmount[1]++;
-							playerWoodCapacity = 200 * buildingsAmount[1];
-							playerStoneCapacity = 175 * buildingsAmount[1];
-							playerIronCapacity = 150 * buildingsAmount[1];
-							cout << "[!] Generated Storage on field " << "[" << i - 1 << "] [" << j << "]" << endl;
-							if (mapFieldsNames[i - 1][j] == "water")	mapFieldsNames[i - 1][j] = "grass";
-						}
-					}
-				}
-			}
-			if (mapFieldsBuildings[i][j] == "townHall" && mapFieldsNames[i][j] == "water") {
-				mapFieldsNames[i][j] = "grass";
-				cout << "[!] Changed field [" << i << "] [" << j << "] from water to grass (!townHall)" << endl;
-			}
-			if (mapFieldsBuildings[i][j] == "storage" && mapFieldsNames[i][j] == "water") {
-				mapFieldsNames[i][j] = "grass";
-				cout << "[!] Changed field [" << i << "] [" << j << "] from water to grass (!storage)" << endl;
-			}
-			playerFoodCapacity = 1200;
-			playerFoodValue = 770;
-			Sleep(1);
-			loadGenerateMap++;	//infoline
+			if (upgradeBuilding[i][j] == true) { sp[1][3].setPosition(72 + (65 * i), 54 + (65 * j)); window.draw(sp[1][3]); }
 		}
 	}
 }
 
+void SHOW_BUILD_MAIN(int x, int y, int i, int j) {
+	sp[x][y].setPosition(52 + (65 * i), 57 + (65 * j));	sp[x][y].setColor(Color::Black);	window.draw(sp[x][y]);
+}
+
 void ADD_BUILDING(int x, int y, int id, string name) {
-	if (name == "storage") {	//MAGAZYN NIE MO¯E BYC NA WODZIE LUB NA INNYM BUDYNKU \/
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
+	if (name == "storage") {
+		if (mapFieldsNames[x][y] != "water") {
 			playerWoodCapacity = 200 * buildingsAmount[id];
 			playerStoneCapacity = 175 * buildingsAmount[id];
 			playerIronCapacity = 150 * buildingsAmount[id];
@@ -1117,7 +845,7 @@ void ADD_BUILDING(int x, int y, int id, string name) {
 		}
 	}
 	else if (name == "townHall") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
+		if (mapFieldsNames[x][y] != "water") {
 			mapFieldsBuildings[x][y] = name;
 			buildingsAmount[id]++;
 			workField[x][y] = true;
@@ -1125,76 +853,45 @@ void ADD_BUILDING(int x, int y, int id, string name) {
 			NEXT_TURN();
 		}
 	}
-	else if (name == "simpleHouse") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-		}
-	}
-	else if (name == "woodenHouse") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-		}
-	}
-	else if (name == "stoneHouse") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-		}
-	}
-	else if (name == "lumberjack") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-			playerWoodPerTurn += ((playerPopulation * 0.09) * 1);
-		}
-	}
-	else if (name == "quarry") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-			playerStonePerTurn += ((playerPopulation * 0.06) * 1);
-		}
-	}
-	else if (name == "mine") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-			playerIronPerTurn += ((playerPopulation * 0.04) * 1);
-		}
-	}
-	else if (name == "farm") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsNames[x][y] != "mountain" && mapFieldsNames[x][y] != "forest" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-		}
-	}
-	else if (name == "fish") {
-		if (mapFieldsNames[x][y] == "water" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-		}
-	}
-	else if (name == "hunting") {
-		if (mapFieldsNames[x][y] == "forest" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-		}
-	}
-	else if (name == "gather") {
-		if ((mapFieldsNames[x][y] == "forest" || mapFieldsNames[x][y] == "dirt") && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-		}
-	}
-	else if (name == "windmill") {
-		if (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] != "forest" && mapFieldsBuildings[x][y] == "" && playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id]) {
-			ADD_BUILDING_MAIN(x, y, id, name);
-		}
-	}
+
+	else if ((name == "simpleHouse" || name == "woodenHouse" || name == "stoneHouse")  && (mapFieldsNames[x][y] != "water"))
+		ADD_BUILDING_MAIN(x, y, id, name);
+
+	else if ((name == "lumberjack" || name == "quarry" || name == "mine") && (mapFieldsNames[x][y] != "water"))
+		ADD_BUILDING_MAIN(x, y, id, name);
+
+	else if ((name == "farm") && (mapFieldsNames[x][y] != "water" && mapFieldsNames[x][y] != "mountain" && mapFieldsNames[x][y] != "forest")) 
+		ADD_BUILDING_MAIN(x, y, id, name);
+		
+	else if ((name == "fish") && (mapFieldsNames[x][y] == "water"))
+		ADD_BUILDING_MAIN(x, y, id, name);
+	
+	else if ((name == "hunting") && (mapFieldsNames[x][y] == "forest"))
+		ADD_BUILDING_MAIN(x, y, id, name);
+	
+	else if ((name == "gather") && (mapFieldsNames[x][y] == "forest" || mapFieldsNames[x][y] == "dirt"))
+		ADD_BUILDING_MAIN(x, y, id, name);
+		
+	else if ((name == "windmill") && (mapFieldsNames[x][y] != "water" && mapFieldsBuildings[x][y] != "forest"))
+		ADD_BUILDING_MAIN(x, y, id, name);
+		
+	else if ((name == "carpenter") && (mapFieldsNames[x][y] != "water"))
+		ADD_BUILDING_MAIN(x, y, id, name);
+	
 	CHECK_STATUS_1();
 }
 
 void ADD_BUILDING_MAIN(int x, int y, int id, string name) {
-	mapFieldsBuildings[x][y] = name;
-	buildingsAmount[id]++;
-	playerWoodValue -= buildingsPriceWood[id];
-	playerStoneValue -= buildingsPriceStone[id];
-	playerIronValue -= buildingsPriceIron[id];
-	workField[x][y] = true;
-	SET_TEXT(incode);
-	NEXT_TURN();
+	if (playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id] && mapFieldsBuildings[x][y] == "") {
+		mapFieldsBuildings[x][y] = name;
+		buildingsAmount[id]++;
+		playerWoodValue -= buildingsPriceWood[id];
+		playerStoneValue -= buildingsPriceStone[id];
+		playerIronValue -= buildingsPriceIron[id];
+		workField[x][y] = true;
+		SET_TEXT(incode);
+		NEXT_TURN();
+	}
 }
 
 void REMOVE_BUILDING(int x, int y, int id) {
@@ -1286,6 +983,7 @@ void PLACE_BUILDING(string building) {
 		if (building == "hunting")		{ PLACE_BUILDING_MAIN(4, 42, 10); break; }
 		if (building == "gather")		{ PLACE_BUILDING_MAIN(4, 43, 11); break; }
 		if (building == "windmill")		{ PLACE_BUILDING_MAIN(4, 44, 12); break; }
+		if (building == "carpenter")	{ PLACE_BUILDING_MAIN(4, 45, 13); break; }
 	}
 	/* DODAÆ DO mouseButtonPressed
 	if (placeBuilding == true) {
@@ -1323,7 +1021,7 @@ void FOOD_MORE() {
 	window.draw(sp[5][46]);
 	for (int j = 0; j < 1; j++) {
 		for (int i = 0; i < 6; i++) {
-			sp[2][i].setPosition(417, 70 + (30 * i));
+			sp[2][i].setPosition(417 + (75 * j), 70 + (30 * i));
 			window.draw(sp[2][i]);
 			switch (i) {
 			case 0:	//WHEAT
@@ -1368,15 +1066,16 @@ void FOOD_MORE_MAIN(int i, int j, bool YesOrNo) {
 }
 
 void MATERIALS_MORE() {
-	sp[5][46].setPosition(403, 47);
-	window.draw(sp[5][46]);
+	sp[5][45].setPosition(880, 47);
+	window.draw(sp[5][45]);
 	for (int j = 0; j < 1; j++) {
 		for (int i = 0; i < 6; i++) {
-			sp[2][i].setPosition(417, 70 + (30 * i));
-			window.draw(sp[2][i]);
+			sp[3][i].setPosition(894 + (75 * j), 70 + (30 * i));
+			window.draw(sp[3][i]);
 			switch (i) {
 			case 0:	//LUMBER?
-				
+				if (playerMaterialsItems[0]) MATERIALS_MORE_MAIN(i, j, true);
+				else MATERIALS_MORE_MAIN(i, j, false);
 				break;
 			case 1: 
 				
@@ -1401,11 +1100,11 @@ void MATERIALS_MORE() {
 
 void MATERIALS_MORE_MAIN(int i, int j, bool YesOrNo) {
 	if (YesOrNo) {
-		sp[2][50].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
+		sp[2][50].setPosition(892 + (75 * j) + 30, 70 + (30 * i));
 		window.draw(sp[2][50]);
 	}
 	if (!YesOrNo) {
-		sp[2][49].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
+		sp[2][49].setPosition(892 + (75 * j) + 30, 70 + (30 * i));
 		window.draw(sp[2][49]);
 	}
 }
@@ -1477,6 +1176,13 @@ void NEXT_TURN() {
 				playerFoodValue += (1 * (playerPopulation * 0.2));
 				if (playerFoodValue > playerFoodCapacity)	playerFoodValue = playerFoodCapacity;
 				if (buildingsAmount[8] > 0) playerFoodItems[5] = true;
+			}
+			else if (mapFieldsBuildings[i][j] == "carpenter") {
+				if (playerWoodValue >= 1 * (playerPopulation * 0.1)) {
+					playerWoodValue -= (1 * (playerPopulation * 0.1));
+					playerMaterialsItems[0] = true;
+				}
+				else playerMaterialsItems[0] = false;
 			}
 		}
 	}
@@ -1651,6 +1357,7 @@ void FIELD_ZOOM(int i, int j) {
 		else if (mapFieldsBuildings[i][j] == "hunting") txt[0][12].setString("Building: Hunting Cabine (" + TO_STRINGSTREAM_DOUBLE(1.3 * (playerPopulation * 0.2)) + "/t.)");
 		else if (mapFieldsBuildings[i][j] == "gather") txt[0][12].setString("Building: Gather's Hut (" + TO_STRINGSTREAM_DOUBLE(0.75 * (playerPopulation * 0.2)) + "/t.)");
 		else if (mapFieldsBuildings[i][j] == "windmill") txt[0][12].setString("Building: Windmill (" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + "/t.)");
+		//carpenter
 		else txt[0][12].setString("Building: None");
 	}
 	else if (lang == "polish") {
