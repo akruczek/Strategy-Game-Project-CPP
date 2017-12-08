@@ -32,7 +32,7 @@ string buildingsStrings[50] = { "townHall", "storage", "simpleHouse", "woodenHou
 								"hunting", "gather", "windmill", "carpenter"};
 int buildingsAmount[50];
 // 0 - townHall, 1 - storage, 2 - simpleHouse, 3 - WoodenHouse, 4 - StoneHouse, 
-// 5 - lumberjack, 6 - quarry, 7 - mine, 8 - farm, 9 - fish, 10 - hunting
+// 5 - lumberjack, 6 - quarry, 7 - mine, 8 - farm, 9 - fish,
 // 10 - hunting, 11 - gather, 12 - windmill, 13 - carpenter
 
 int buildingsPriceWood[50] = { 0, 50, 20, 30, 30,

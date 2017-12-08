@@ -22,7 +22,7 @@ string INPUT_TEXT(int posX, int posY, wstring inputTextName, string outputString
 void START_GAME();
 void CHEATS();
 void SHOW_BUILD();
-void SHOW_BUILD_MAIN(int x, int y, int i, int j);
+void SHOW_BUILD_MAIN(int x, int y, int i, int j, Color color);
 void FIELD_ZOOM(int i, int j);
 void YES_NO_BOX(wstring boxContent, wstring boxExtraContent);
 void RELOAD_LANGUAGE_STRINGS();
@@ -35,6 +35,7 @@ void MATERIALS_MORE_MAIN(int i, int j, bool YesOrNo);
 bool yesNoBoxActive = false;
 bool difficulty[3] = { 1, 0, 0 };
 bool mapSize[3] = { 0, 1, 0 };
+void FIELD_ZOOM_MAIN(int i, int j, wstring buildName, string attr, bool isUp, string upAttr, bool isWork);
 
 bool textareaActive = false;
 String inputText("");
@@ -806,32 +807,31 @@ void SHOW_BUILD() {
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
 			for (int k = 0; k < 1; k++) {
-				if (mapFieldsBuildings[i][j] == "townHall") { SHOW_BUILD_MAIN(4, 39, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "storage") { SHOW_BUILD_MAIN(4, 38, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "simpleHouse") { SHOW_BUILD_MAIN(4, 30, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "woodenHouse") { SHOW_BUILD_MAIN(4, 31, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "stoneHouse") { SHOW_BUILD_MAIN(4, 32, i, j); break; }
+				if (mapFieldsBuildings[i][j] == "townHall") { SHOW_BUILD_MAIN(4, 39, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "storage") { SHOW_BUILD_MAIN(4, 38, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "simpleHouse") { SHOW_BUILD_MAIN(4, 30, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "woodenHouse") { SHOW_BUILD_MAIN(4, 31, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "stoneHouse") { SHOW_BUILD_MAIN(4, 32, i, j, Color::Black); break; }
 				if (mapFieldsBuildings[i][j] == "lumberjack") {
-					if (mapFieldsWoodValue[i][j] < 1) sp[4][33].setColor(darkRed);	SHOW_BUILD_MAIN(4, 33, i, j); break; }
+					if (mapFieldsWoodValue[i][j] < 1) SHOW_BUILD_MAIN(4, 33, i, j, darkRed); else SHOW_BUILD_MAIN(4, 33, i, j, Color::Black); break; }
 				if (mapFieldsBuildings[i][j] == "quarry") {
-					if (mapFieldsStoneValue[i][j] < 1) sp[4][34].setColor(darkRed); SHOW_BUILD_MAIN(4, 34, i, j); break; }
+					if (mapFieldsStoneValue[i][j] < 1) SHOW_BUILD_MAIN(4, 34, i, j, darkRed); else SHOW_BUILD_MAIN(4, 34, i, j, Color::Black); break; }
 				if (mapFieldsBuildings[i][j] == "mine") {
-					if (mapFieldsIronValue[i][j] < 1) sp[4][35].setColor(darkRed);
-					SHOW_BUILD_MAIN(4, 35, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "farm") { SHOW_BUILD_MAIN(4, 40, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "fish") { SHOW_BUILD_MAIN(4, 41, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "hunting") { SHOW_BUILD_MAIN(4, 42, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "gather") { SHOW_BUILD_MAIN(4, 43, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "windmill") { SHOW_BUILD_MAIN(4, 44, i, j); break; }
-				if (mapFieldsBuildings[i][j] == "carpenter") { SHOW_BUILD_MAIN(4, 45, i, j); break; }
+					if (mapFieldsIronValue[i][j] < 1) SHOW_BUILD_MAIN(4, 35, i, j, darkRed); else SHOW_BUILD_MAIN(4, 35, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "farm") { SHOW_BUILD_MAIN(4, 40, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "fish") { SHOW_BUILD_MAIN(4, 41, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "hunting") { SHOW_BUILD_MAIN(4, 42, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "gather") { SHOW_BUILD_MAIN(4, 43, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "windmill") { SHOW_BUILD_MAIN(4, 44, i, j, Color::Black); break; }
+				if (mapFieldsBuildings[i][j] == "carpenter") { SHOW_BUILD_MAIN(4, 45, i, j, Color::Black); break; }
 			}
 			if (upgradeBuilding[i][j] == true) { sp[1][3].setPosition(72 + (65 * i), 54 + (65 * j)); window.draw(sp[1][3]); }
 		}
 	}
 }
 
-void SHOW_BUILD_MAIN(int x, int y, int i, int j) {
-	sp[x][y].setPosition(52 + (65 * i), 57 + (65 * j));	sp[x][y].setColor(Color::Black);	window.draw(sp[x][y]);
+void SHOW_BUILD_MAIN(int x, int y, int i, int j, Color color) {
+	sp[x][y].setPosition(52 + (65 * i), 57 + (65 * j));	sp[x][y].setColor(color);	window.draw(sp[x][y]);
 }
 
 void ADD_BUILDING(int x, int y, int id, string name) {
@@ -908,6 +908,14 @@ void UPGRADE_BUILDING(int x, int y, string name) {
 	else if (name == "simpleHouse") { UPGRADE_BUILDING_MAIN(x, y, 50, 50, 50); }
 	else if (name == "woodenHouse") { UPGRADE_BUILDING_MAIN(x, y, 200, 50, 50); }
 	else if (name == "stoneHouse") { UPGRADE_BUILDING_MAIN(x, y, 50, 200, 100); }
+	else if (name == "lumberjack") { UPGRADE_BUILDING_MAIN(x, y, 200, 50, 50); }
+	else if (name == "quarry") { UPGRADE_BUILDING_MAIN(x, y, 50, 200, 50); }
+	else if (name == "mine") { UPGRADE_BUILDING_MAIN(x, y, 50, 50, 200); }
+	else if (name == "farm") { UPGRADE_BUILDING_MAIN(x, y, 100, 100, 50); }
+	else if (name == "fish") { UPGRADE_BUILDING_MAIN(x, y, 100, 100, 50); }
+	else if (name == "hunting") { UPGRADE_BUILDING_MAIN(x, y, 250, 50, 50); }
+	else if (name == "gather") { UPGRADE_BUILDING_MAIN(x, y, 200, 50, 100); }
+	else if (name == "windmill") { UPGRADE_BUILDING_MAIN(x, y, 100, 100, 100); }
 }
 
 void UPGRADE_BUILDING_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost) {
@@ -923,6 +931,14 @@ void UPGRADE_BUILDING_COST(int x, int y, string name) {
 	if (name == "simpleHouse" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 50, 50, 50); }
 	if (name == "woodenHouse" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 200, 50, 50); }
 	if (name == "stoneHouse" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 50, 200, 100); }
+	if (name == "lumberjack" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 200, 50, 50); }
+	if (name == "quarry" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 50, 200, 50); }
+	if (name == "mine" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 50, 50, 200); }
+	if (name == "farm" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 100, 100, 50); }
+	if (name == "fish" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 100, 100, 50); }
+	if (name == "hunting" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 250, 50, 50); }
+	if (name == "gather" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 200, 50, 100); }
+	if (name == "windmill" && !upgradeBuilding[x][y]) { UPGRADE_BUILDING_COST_MAIN(x, y, 100, 100, 100); }
 }
 
 void UPGRADE_BUILDING_COST_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost) {
@@ -1123,6 +1139,10 @@ void NEXT_TURN() {
 				if (mapFieldsWoodValue[i][j] > ((playerPopulation * 0.09) * 1)) {
 					mapFieldsWoodValue[i][j] -= ((playerPopulation * 0.09) * 1);
 					playerWoodValue += ((playerPopulation * 0.09) * 1);
+					if (upgradeBuilding[i][j] && mapFieldsWoodValue[i][j] >((playerPopulation * 0.09) * 1)) {
+						mapFieldsWoodValue[i][j] -= ((playerPopulation * 0.09) * 1);
+						playerWoodValue += ((playerPopulation * 0.09) * 1);
+					}
 				}
 				else if (mapFieldsWoodValue[i][j] < ((playerPopulation * 0.09) * 1) && mapFieldsWoodValue > 0) {
 					playerWoodValue += mapFieldsWoodValue[i][j];
@@ -1134,46 +1154,59 @@ void NEXT_TURN() {
 				if (mapFieldsStoneValue[i][j] > ((playerPopulation * 0.06) * 1)) {
 					mapFieldsStoneValue[i][j] -= ((playerPopulation * 0.06) * 1);
 					playerStoneValue += ((playerPopulation * 0.06) * 1);
+					if (upgradeBuilding[i][j] && mapFieldsStoneValue[i][j] > ((playerPopulation * 0.06) * 1)) {
+						mapFieldsStoneValue[i][j] -= ((playerPopulation * 0.06) * 1);
+						playerStoneValue += ((playerPopulation * 0.06) * 1);
+					}
 				}
-				else if (mapFieldsWoodValue[i][j] < ((playerPopulation * 0.06) * 1) && mapFieldsWoodValue > 0) {
+				else if (mapFieldsStoneValue[i][j] < ((playerPopulation * 0.06) * 1) && mapFieldsWoodValue > 0) {
 					playerStoneValue += mapFieldsStoneValue[i][j];
 					mapFieldsStoneValue[i][j] -= mapFieldsStoneValue[i][j];
 				}
-				if (mapFieldsWoodValue[i][j] == 0) workField[i][j] = false;
+				if (mapFieldsStoneValue[i][j] == 0) workField[i][j] = false;
 			}
 			else if (mapFieldsBuildings[i][j] == "mine") {
 				if (mapFieldsIronValue[i][j] > ((playerPopulation * 0.04) * 1)) {
 					mapFieldsIronValue[i][j] -= ((playerPopulation * 0.04) * 1);
 					playerIronValue += ((playerPopulation * 0.04) * 1);
+					if (upgradeBuilding[i][j] && mapFieldsIronValue[i][j] > ((playerPopulation * 0.04) * 1)) {
+						mapFieldsIronValue[i][j] -= ((playerPopulation * 0.04) * 1);
+						playerIronValue += ((playerPopulation * 0.04) * 1);
+					}
 				}
 				else if (mapFieldsIronValue[i][j] < ((playerPopulation * 0.04) * 1) && mapFieldsIronValue > 0) {
 					playerIronValue += mapFieldsIronValue[i][j];
 					mapFieldsIronValue[i][j] -= mapFieldsIronValue[i][j];
 				}
-				if (mapFieldsWoodValue[i][j] == 0) workField[i][j] = false;
+				if (mapFieldsIronValue[i][j] == 0) workField[i][j] = false;
 			}
 			else if (mapFieldsBuildings[i][j] == "farm") {
 				playerFoodValue += (1 * (playerPopulation * 0.2));
+				if (upgradeBuilding[i][j]) playerFoodValue += (1 * (playerPopulation * 0.2));
 				if (playerFoodValue > playerFoodCapacity)	playerFoodValue = playerFoodCapacity;
 				playerFoodItems[0] = true;
 			}
 			else if (mapFieldsBuildings[i][j] == "fish") {
 				playerFoodValue += (1.2 * (playerPopulation * 0.2));
+				if (upgradeBuilding[i][j]) playerFoodValue += (1.2 * (playerPopulation * 0.2));
 				if (playerFoodValue > playerFoodCapacity)	playerFoodValue = playerFoodCapacity;
 				playerFoodItems[1] = true;
 			}
 			else if (mapFieldsBuildings[i][j] == "hunting") {
 				playerFoodValue += (1.3 * (playerPopulation * 0.2));
+				if (upgradeBuilding[i][j]) playerFoodValue += (1.3 * (playerPopulation * 0.2));
 				if (playerFoodValue > playerFoodCapacity)	playerFoodValue = playerFoodCapacity;
 				playerFoodItems[2] = true;
 			}
 			else if (mapFieldsBuildings[i][j] == "gather") {
 				playerFoodValue += (0.75 * (playerPopulation * 0.2));
+				if (upgradeBuilding[i][j]) playerFoodValue += (0.75 * (playerPopulation * 0.2));
 				if (playerFoodValue > playerFoodCapacity)	playerFoodValue = playerFoodCapacity;
 				playerFoodItems[3] = true; playerFoodItems[4] = true;
 			}
 			else if (mapFieldsBuildings[i][j] == "windmill") {
 				playerFoodValue += (1 * (playerPopulation * 0.2));
+				if (upgradeBuilding[i][j]) playerFoodValue += (1 * (playerPopulation * 0.2));
 				if (playerFoodValue > playerFoodCapacity)	playerFoodValue = playerFoodCapacity;
 				if (buildingsAmount[8] > 0) playerFoodItems[5] = true;
 			}
@@ -1329,35 +1362,34 @@ void FIELD_ZOOM(int i, int j) {
 		txt[0][3].setString("Stone: " + TO_STRINGSTREAM_DOUBLE(ROUND(mapFieldsStoneValue[i][j])) + "/" + TO_STRINGSTREAM_DOUBLE(ROUND(mapFieldsStoneCapacity[i][j])));
 		txt[0][4].setString("Iron: " + TO_STRINGSTREAM_DOUBLE(ROUND(mapFieldsIronValue[i][j])) + "/" + TO_STRINGSTREAM_DOUBLE(ROUND(mapFieldsIronCapacity[i][j])));
 		//Budynki \/
-		if (mapFieldsBuildings[i][j] == "townHall")	txt[0][12].setString("Building: Town Hall");
-		else if (mapFieldsBuildings[i][j] == "storage") txt[0][12].setString("Building: Storage");
-		else if (mapFieldsBuildings[i][j] == "simpleHouse") {
-			if (!upgradeBuilding[i][j]) txt[0][12].setString("Building: Simple House (4 res.)");
-			else txt[0][12].setString("Building: Simple House (8 res.)");
-		}
-		else if (mapFieldsBuildings[i][j] == "woodenHouse") {
-			if (!upgradeBuilding[i][j]) txt[0][12].setString("Building: Wooden House (7 res.)");
-			else txt[0][12].setString("Building: Wooden House (14 res.)");
-		}
-		else if (mapFieldsBuildings[i][j] == "stoneHouse") {
-			if (!upgradeBuilding[i][j]) txt[0][12].setString("Building: Stone House (12 res.)");
-			else txt[0][12].setString("Building: Stone House (24 res.)");
-		}
-		else if (mapFieldsBuildings[i][j] == "lumberjack") {
-			if (workField[i][j]==true) txt[0][12].setString("Building: Lumberjack (" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.09) * 1)) + "/t.)");
-			else txt[0][12].setString("Building: Lumberjack -empty"); }
-		else if (mapFieldsBuildings[i][j] == "quarry") {
-			if (workField[i][j] == true) txt[0][12].setString("Building: Quarry (" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.06) * 1)) + "/t.)");
-			else txt[0][12].setString("Building: Quarry -empty"); }
-		else if (mapFieldsBuildings[i][j] == "mine") {
-			if (workField[i][j] == true) txt[0][12].setString("Building: Mine (" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.04) * 1)) + "/t.)");
-			else txt[0][12].setString("Building: Mine -empty"); }
-		else if (mapFieldsBuildings[i][j] == "farm") txt[0][12].setString("Building: Farm (" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + "/t.)");
-		else if (mapFieldsBuildings[i][j] == "fish") txt[0][12].setString("Building: Fish (" + TO_STRINGSTREAM_DOUBLE(1.2 * (playerPopulation * 0.2)) + "/t.)");
-		else if (mapFieldsBuildings[i][j] == "hunting") txt[0][12].setString("Building: Hunting Cabine (" + TO_STRINGSTREAM_DOUBLE(1.3 * (playerPopulation * 0.2)) + "/t.)");
-		else if (mapFieldsBuildings[i][j] == "gather") txt[0][12].setString("Building: Gather's Hut (" + TO_STRINGSTREAM_DOUBLE(0.75 * (playerPopulation * 0.2)) + "/t.)");
-		else if (mapFieldsBuildings[i][j] == "windmill") txt[0][12].setString("Building: Windmill (" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + "/t.)");
-		//carpenter
+		if (mapFieldsBuildings[i][j] == "townHall")
+			FIELD_ZOOM_MAIN(i, j, L"Town Hall", "", false, "", false);
+		else if (mapFieldsBuildings[i][j] == "storage")
+			FIELD_ZOOM_MAIN(i, j, L"Storage", "", false, "", false);
+		else if (mapFieldsBuildings[i][j] == "simpleHouse")
+			FIELD_ZOOM_MAIN(i, j, L"Simple House", "(4 res.)", true, "(8 res.)", false);
+		else if (mapFieldsBuildings[i][j] == "woodenHouse")
+			FIELD_ZOOM_MAIN(i, j, L"Wooden House", "(7 res.)", true, "(14 res.)", false);
+		else if (mapFieldsBuildings[i][j] == "stoneHouse")
+			FIELD_ZOOM_MAIN(i, j, L"Stone House", "(12 res.)", true, "(24 res.)", false);
+		else if (mapFieldsBuildings[i][j] == "lumberjack")
+			FIELD_ZOOM_MAIN(i, j, L"Lumberjack", "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.09) * 1)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.09) * 2)) + ")", true);
+		else if (mapFieldsBuildings[i][j] == "quarry")
+			FIELD_ZOOM_MAIN(i, j, L"Quarry", "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.06) * 1)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.06) * 2)) + ")", true);
+		else if (mapFieldsBuildings[i][j] == "mine")
+			FIELD_ZOOM_MAIN(i, j, L"Mine", "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.04) * 1)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.04) * 2)) + ")", true);
+		else if (mapFieldsBuildings[i][j] == "farm")
+			FIELD_ZOOM_MAIN(i, j, L"Farm", "(" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(2 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "fish")
+			FIELD_ZOOM_MAIN(i, j, L"Fisher Hut", "(" + TO_STRINGSTREAM_DOUBLE(1.2 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(2.4 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "hunting")
+			FIELD_ZOOM_MAIN(i, j, L"Hunting Cabine", "(" + TO_STRINGSTREAM_DOUBLE(1.3 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(2.6 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "gather")
+			FIELD_ZOOM_MAIN(i, j, L"Gather's Hut", "(" + TO_STRINGSTREAM_DOUBLE(0.75 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(1.5 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "windmill") 
+			FIELD_ZOOM_MAIN(i, j, L"Windmill", "(" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(2 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "carpenter")
+			FIELD_ZOOM_MAIN(i, j, L"Carpenter", "(-" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.1)) + ")", false, "", false);
 		else txt[0][12].setString("Building: None");
 	}
 	else if (lang == "polish") {
@@ -1367,40 +1399,44 @@ void FIELD_ZOOM(int i, int j) {
 		txt[0][3].setString(L"Kamieñ: " + TO_STRINGSTREAM_DOUBLE(ROUND(mapFieldsStoneValue[i][j])) + "/" + TO_STRINGSTREAM_DOUBLE(ROUND(mapFieldsStoneCapacity[i][j])));
 		txt[0][4].setString(L"¯elazo: " + TO_STRINGSTREAM_DOUBLE(ROUND(mapFieldsIronValue[i][j])) + "/" + TO_STRINGSTREAM_DOUBLE(ROUND(mapFieldsIronCapacity[i][j])));
 		//Budynki \/
-		if (mapFieldsBuildings[i][j] == "townHall")	txt[0][12].setString("Budynek: Ratusz");
-		else if (mapFieldsBuildings[i][j] == "storage") txt[0][12].setString("Budynek: Magazyn");
-		else if (mapFieldsBuildings[i][j] == "simpleHouse") {
-			if (!upgradeBuilding[i][j]) txt[0][12].setString(L"Budynek: Zwyk³y Dom (4 miesz.)");
-			else txt[0][12].setString(L"Budynek: Zwyk³y Dom (8 miesz.)");
-		}
-		else if (mapFieldsBuildings[i][j] == "woodenHouse") {
-			if (!upgradeBuilding[i][j]) txt[0][12].setString("Budynek: Drewniany Dom (7 miesz.)");
-			else txt[0][12].setString("Budynek: Drewniany Dom (14 miesz.)");
-		}
-		else if (mapFieldsBuildings[i][j] == "stoneHouse") {
-			if (!upgradeBuilding[i][j]) txt[0][12].setString("Budynek: Kamienny Dom (12 miesz.)");
-			else txt[0][12].setString("Budynek: Kamienny Dom (24 miesz.)");
-		}
-		else if (mapFieldsBuildings[i][j] == "lumberjack") {
-			if (workField[i][j] == true) txt[0][12].setString("Budynek: Drwal (" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.09) * 1)) + "/t.)");
-			else txt[0][12].setString("Bdynek: Drwal -pusty");
-		}
-		else if (mapFieldsBuildings[i][j] == "quarry") {
-			if (workField[i][j] == true) txt[0][12].setString(L"Budynek: Kamienio³om (" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.06) * 1)) + "/t.)");
-			else txt[0][12].setString(L"Budynek: Kamienio³om -pusty");
-		}
-		else if (mapFieldsBuildings[i][j] == "mine") {
-			if (workField[i][j] == true) txt[0][12].setString("Budynek: Kopalnia (" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.04) * 1)) + "/t.)");
-			else txt[0][12].setString("Budynek: Kopalnia -pusty");
-		}
-		else if (mapFieldsBuildings[i][j] == "farm") txt[0][12].setString("Budynek: Farma (" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + "/t.)");
-		else if (mapFieldsBuildings[i][j] == "fish") txt[0][12].setString("Budynek: Chata Rybaka (" + TO_STRINGSTREAM_DOUBLE(1.2 * (playerPopulation * 0.2)) + "/t.)");
-		else if (mapFieldsBuildings[i][j] == "hunting") txt[0][12].setString(L"Budynek: Chata £owcy (" + TO_STRINGSTREAM_DOUBLE(1.3 * (playerPopulation * 0.2)) + "/t.)");
-		else if (mapFieldsBuildings[i][j] == "gather") txt[0][12].setString("Budynek: Chata Zbieracza (" + TO_STRINGSTREAM_DOUBLE(0.75 * (playerPopulation * 0.2)) + "/t.)");
-		else if (mapFieldsBuildings[i][j] == "windmill") txt[0][12].setString(L"Budynek: M³yn (" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + "/t.)");
+		if (mapFieldsBuildings[i][j] == "townHall")
+			FIELD_ZOOM_MAIN(i, j, L"Ratusz", "", false, "", false);
+		else if (mapFieldsBuildings[i][j] == "storage")
+			FIELD_ZOOM_MAIN(i, j, L"Magazyn", "", false, "", false);
+		else if (mapFieldsBuildings[i][j] == "simpleHouse")
+			FIELD_ZOOM_MAIN(i, j, L"Zwyk³y Dom", "(4 miesz.)", true, "(8 miesz.)", false);
+		else if (mapFieldsBuildings[i][j] == "woodenHouse")
+			FIELD_ZOOM_MAIN(i, j, L"Drewniany Dom", "(7 miesz.)", true, "(14 miesz.)", false);
+		else if (mapFieldsBuildings[i][j] == "stoneHouse")
+			FIELD_ZOOM_MAIN(i, j, L"Kamienny Dom", "(12 miesz.)", true, "(24 miesz.)", false);
+		else if (mapFieldsBuildings[i][j] == "lumberjack")
+			FIELD_ZOOM_MAIN(i, j, L"Drwal", "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.09) * 1)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.09) * 2)) + ")", true);
+		else if (mapFieldsBuildings[i][j] == "quarry")
+			FIELD_ZOOM_MAIN(i, j, L"Kamienio³om", "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.06) * 1)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.06) * 2)) + ")", true);
+		else if (mapFieldsBuildings[i][j] == "mine")
+			FIELD_ZOOM_MAIN(i, j, L"Kopalnia", "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.04) * 1)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(((playerPopulation * 0.04) * 2)) + ")", true);
+		else if (mapFieldsBuildings[i][j] == "farm")
+			FIELD_ZOOM_MAIN(i, j, L"Farma", "(" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(2 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "fish")
+			FIELD_ZOOM_MAIN(i, j, L"Chata Rybaka", "(" + TO_STRINGSTREAM_DOUBLE(1.2 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(2.4 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "hunting")
+			FIELD_ZOOM_MAIN(i, j, L"Chata Myœliwego", "(" + TO_STRINGSTREAM_DOUBLE(1.3 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(2.6 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "gather")
+			FIELD_ZOOM_MAIN(i, j, L"Chata Zbieracza", "(" + TO_STRINGSTREAM_DOUBLE(0.75 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(1.5 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "windmill")
+			FIELD_ZOOM_MAIN(i, j, L"M³yn", "(" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.2)) + ")", true, "(" + TO_STRINGSTREAM_DOUBLE(2 * (playerPopulation * 0.2)) + ")", false);
+		else if (mapFieldsBuildings[i][j] == "carpenter")
+			FIELD_ZOOM_MAIN(i, j, L"Stolarz", "(-" + TO_STRINGSTREAM_DOUBLE(1 * (playerPopulation * 0.1)) + ")", false, "", false);
 		else txt[0][12].setString("Budynek: Brak");
 	}
-	if (upgradeBuilding[i][j])	txt[0][12].setString(txt[0][12].getString() + " |^|");
+}
+
+void FIELD_ZOOM_MAIN(int i, int j, wstring buildName, string attr, bool isUp, string upAttr, bool isWork) {
+	if (isUp && upgradeBuilding[i][j]) attr = upAttr;
+	if (isWork && !workField[i][j]) attr = "-empty";
+	if (lang == "english")	txt[0][12].setString("Building: " + buildName + " " + attr);
+	if (lang == "polish")	txt[0][12].setString("Budynek: " + buildName + " " + attr);
+	if (isUp && upgradeBuilding[i][j]) txt[0][12].setString(txt[0][12].getString() + " |^|");
 }
 
 void RELOAD_LANGUAGE_STRINGS() {

@@ -18,4 +18,8 @@
 --[+] Carpenter Building
 --[+] New items type (Materials)
 --[*] ...optimalization
+
+-commit 08.12.2017
+--[+] More buildings upgrades
+--[*] ...optimalization
 */
