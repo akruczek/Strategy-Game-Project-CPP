@@ -21,9 +21,6 @@ void CHECKBOX(int posX, int posY, bool argumanet[], wstring checkboxName, int bo
 string INPUT_TEXT(int posX, int posY, wstring inputTextName, string outputString);
 void START_GAME();
 void CHEATS();
-void SHOW_BUILD();
-void SHOW_BUILD_MAIN(int x, int y, int i, int j, Color color);
-void FIELD_ZOOM(int i, int j);
 void YES_NO_BOX(wstring boxContent, wstring boxExtraContent);
 void RELOAD_LANGUAGE_STRINGS();
 void NEXT_TURN();
@@ -34,8 +31,7 @@ void MATERIALS_MORE();
 void MATERIALS_MORE_MAIN(int i, int j, bool YesOrNo);
 bool yesNoBoxActive = false;
 bool difficulty[3] = { 1, 0, 0 };
-bool mapSize[3] = { 0, 1, 0 };
-void FIELD_ZOOM_MAIN(int i, int j, wstring buildName, string attr, bool isUp, string upAttr, bool isWork);
+
 
 bool textareaActive = false;
 String inputText("");
@@ -1129,9 +1125,6 @@ void NEXT_TURN() {
 	turn++;
 	txt[5][10].setString(TO_STRINGSTREAM(turn));
 	txt[5][10].setPosition(1225 - (txt[5][10].getLocalBounds().width / 2), 20);
-//	playerWoodValue += playerWoodPerTurn;
-//	playerStoneValue += playerStonePerTurn;
-//	playerIronValue += playerIronPerTurn;
 
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {

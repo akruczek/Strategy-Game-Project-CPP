@@ -22,4 +22,6 @@
 -commit 08.12.2017
 --[+] More buildings upgrades
 --[*] ...optimalization
+
+-commit ?
 */
