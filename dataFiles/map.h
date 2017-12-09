@@ -18,7 +18,7 @@ void UPGRADE_BUILDING_COST_MAIN(int x, int y, int woodCost, int stoneCost, int i
 void SHOW_BUILD();
 void SHOW_BUILD_MAIN(int x, int y, int i, int j, Color color);
 void FIELD_ZOOM(int i, int j);
-void FIELD_ZOOM_MAIN(int i, int j, wstring buildName, string attr, bool isUp, string upAttr, bool isWork);
+void FIELD_ZOOM_MAIN(int i, int j, wstring buildName, string attr, bool isUp, string upAttr, bool isWork, bool isProces, bool itemId);
 
 bool mapSize[3] = { 0, 1, 0 };	//[?]
 
@@ -35,28 +35,28 @@ string mapName = "mapName";
 string mapFieldsBuildings[10][10];
 string buildingsStrings[50] = { "townHall", "storage", "simpleHouse", "woodenHouse", "stoneHouse",
 								"lumberjack", "quarry", "mine", "farm", "fish",
-								"hunting", "gather", "windmill", "carpenter" };
+								"hunting", "gather", "windmill", "carpenter", "foundry" };
 
 int buildingsAmount[50];
 // 0 - townHall, 1 - storage, 2 - simpleHouse, 3 - WoodenHouse, 4 - StoneHouse, 
 // 5 - lumberjack, 6 - quarry, 7 - mine, 8 - farm, 9 - fish,
-// 10 - hunting, 11 - gather, 12 - windmill, 13 - carpenter
+// 10 - hunting, 11 - gather, 12 - windmill, 13 - carpenter, 14 - foundry
 
 int buildingsPriceWood[50] = { 0, 50, 20, 30, 30,
 								10, 55, 50, 20, 35,
-								35, 40, 55, 45 };
+								35, 40, 55, 45, 20 };
 
 int buildingsPriceStone[50] = { 0, 25, 5, 15, 30,
 								5, 5, 15, 5, 15,
-								15, 10, 45, 15 };
+								15, 10, 45, 15, 60 };
 
 int buildingsPriceIron[50] = { 0, 10, 0, 5, 20,
 								0, 15, 5, 0, 5,
-								10, 0, 25, 40 };
+								10, 0, 25, 40, 100 };
 
 // 0 - (w:0, s:0, i:0) 1 - (w:50, s:25, i:10), 2 - (w:20, s:5, i:0), 3 - (w:30, s:15, i:5), 4 - (w:30, s:30, i:20)
 // 5 - (w:10, s:5, i:0), 6 - (w:55, s:5, i:15), 7 - (w:50, s:15, i:5), 8 - (w:20, s:5, i:0), 9 - (w:35, s:15, i:5)
-// 10 - (w:35, :15, i:10), 11 - (w:40, s:10, i:0), 12 - (w:55, s:45, i:25), 13 - (w:45, s:15, i:40)
+// 10 - (w:35, :15, i:10), 11 - (w:40, s:10, i:0), 12 - (w:55, s:45, i:25), 13 - (w:45, s:15, i:40), 14 - (w:20, s:60, i:100)
 
 bool upgradeBuilding[10][10];
 
@@ -67,7 +67,12 @@ int loadGenerateMap = 0;
 extern int playerPopulation;
 extern Time mainTime;
 extern Clock mainClock;
-extern float playerWoodCapacity, playerStoneCapacity, playerIronCapacity, playerFoodValue, playerFoodCapacity;
+extern float playerWoodCapacity, playerStoneCapacity, playerIronCapacity, playerFoodValue, playerFoodCapacity,
+			 playerWoodValue, playerStoneValue, playerIronValue;
+extern void SET_TEXT(string incode);
+extern Text txt[51][51];
+extern Sprite sp[51][51];
+extern string lang;
 
 void MAP_GENERATOR() {
 	loadGenerateMap = 1;	//infoline
@@ -320,4 +325,82 @@ void MAP_GENERATOR() {
 	}
 }
 
+void SHOW_BUILD_MAIN(int x, int y, int i, int j, Color color) {
+	sp[x][y].setPosition(52 + (65 * i), 57 + (65 * j));	sp[x][y].setColor(color);	window.draw(sp[x][y]);
+}
+
+void ADD_BUILDING_MAIN(int x, int y, int id, string name) {
+	if (playerWoodValue >= buildingsPriceWood[id] && playerStoneValue >= buildingsPriceStone[id] && playerIronValue >= buildingsPriceIron[id] && mapFieldsBuildings[x][y] == "") {
+		mapFieldsBuildings[x][y] = name;
+		buildingsAmount[id]++;
+		playerWoodValue -= buildingsPriceWood[id];
+		playerStoneValue -= buildingsPriceStone[id];
+		playerIronValue -= buildingsPriceIron[id];
+		workField[x][y] = true;
+		SET_TEXT(incode);
+		NEXT_TURN();
+	}
+}
+
+void UPGRADE_BUILDING_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost) {
+	if (playerWoodValue >= woodCost && playerStoneValue >= stoneCost && playerIronValue >= ironCost) {
+		upgradeBuilding[x][y] = true;
+		playerWoodValue -= woodCost;	playerStoneValue -= stoneCost; playerIronValue -= ironCost;
+	}
+	NEXT_TURN();
+}
+
+void UPGRADE_BUILDING_COST_MAIN(int x, int y, int woodCost, int stoneCost, int ironCost) {
+	txt[0][13].setFillColor(Color::Red);
+	txt[0][13].setPosition(1135, 60);		txt[0][13].setString("-" + TO_STRINGSTREAM(woodCost));		window.draw(txt[0][13]);
+	txt[0][13].setPosition(1135, 60 + 50);	txt[0][13].setString("-" + TO_STRINGSTREAM(stoneCost));		window.draw(txt[0][13]);
+	txt[0][13].setPosition(1135, 60 + 100);	txt[0][13].setString("-" + TO_STRINGSTREAM(ironCost));		window.draw(txt[0][13]);
+}
+
+void PLACE_BUILDING_MAIN(int spIdX, int spIdY, int priceId) {
+	sp[spIdX][spIdY].setPosition(mouseX + 10, mouseY - 10);
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			if (mouseX >= 50 + (65 * i) && mouseX <= 50 + (65 * i) + 65 && mouseY >= 50 + (65 * j) && mouseY <= 50 + (65 * j) + 65) {
+				sp[5][3].setPosition(50 + (65 * i), 50 + (65 * j));
+				window.draw(sp[5][3]);
+			}
+		}
+	}
+	txt[0][13].setPosition(1135, 60);		txt[0][13].setString("-" + TO_STRINGSTREAM(buildingsPriceWood[priceId]));		window.draw(txt[0][13]);
+	txt[0][13].setPosition(1135, 60 + 50);	txt[0][13].setString("-" + TO_STRINGSTREAM(buildingsPriceStone[priceId]));		window.draw(txt[0][13]);
+	txt[0][13].setPosition(1135, 60 + 100);	txt[0][13].setString("-" + TO_STRINGSTREAM(buildingsPriceIron[priceId]));		window.draw(txt[0][13]);
+	window.draw(sp[spIdX][spIdY]);
+	CHECK_STATUS_1();
+}
+
+void FOOD_MORE_MAIN(int i, int j, bool YesOrNo) {
+	if (YesOrNo) {
+		sp[2][50].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
+		window.draw(sp[2][50]);
+	}
+	if (!YesOrNo) {
+		sp[2][49].setPosition(415 + (75 * j) + 30, 70 + (30 * i));
+		window.draw(sp[2][49]);
+	}
+}
+
+void MATERIALS_MORE_MAIN(int i, int j, bool YesOrNo) {
+	if (YesOrNo) {
+		sp[2][50].setPosition(892 + (75 * j) + 30, 70 + (30 * i));
+		window.draw(sp[2][50]);
+	}
+	if (!YesOrNo) {
+		sp[2][49].setPosition(892 + (75 * j) + 30, 70 + (30 * i));
+		window.draw(sp[2][49]);
+	}
+}
+
+void FIELD_ZOOM_MAIN(int i, int j, wstring buildName, string attr, bool isUp, string upAttr, bool isWork, bool isProces, bool itemId) {
+	if (isUp && upgradeBuilding[i][j]) attr = upAttr;
+	if ((isWork && !workField[i][j]) || (isProces && !itemId)) attr = "-empty";
+	if (lang == "english")	txt[0][12].setString("Building: " + buildName + " " + attr);
+	if (lang == "polish")	txt[0][12].setString("Budynek: " + buildName + " " + attr);
+	if (isUp && upgradeBuilding[i][j]) txt[0][12].setString(txt[0][12].getString() + " |^|");
+}
 #endif

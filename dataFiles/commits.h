@@ -23,5 +23,10 @@
 --[+] More buildings upgrades
 --[*] ...optimalization
 
--commit ?
+-commit 08.12.2017
+--[*] ...optimalization
+
+-commit 09.12.2017
+--[+] Building: Foundry
+--[+] Material: iron ingot
 */

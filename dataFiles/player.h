@@ -17,7 +17,7 @@ float playerFoodPerTurn = 0;
 bool playerFoodItems[30];
 // 0 - wheat, 1 - fish, 2 - meat, 3 - herb, 4 - forestFruit, 5 - flour
 bool playerMaterialsItems[30];
-// 0 - planks
+// 0 - planks, 1 - ironIngot
 int turn = 1;
 
 //g³ód, chata rybaka only on water
