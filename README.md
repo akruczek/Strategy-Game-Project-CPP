@@ -1,4 +1,4 @@
-# Old, Unfinished game project using <b>C++</b> language with <b>SFML</b> library
+## Old, Unfinished game project using <b>C++</b> language with <b>SFML</b> library
 ### Last update: 09.12.2017
 ### To run game -> open <i>exe file</i> folder and run <i>strategy-game.exe</i> file.
 ## Description
